@@ -6,25 +6,35 @@
 // Under the hood, we wrap your main function with some extra code so that it behaves properly
 // inside the zkVM.
 #![no_main]
+
+use streamsha::{ hash_state::{HashState, Sha256HashState}, traits::{Resumable, StreamHasher}, Sha256};
+use usagiverify_lib::IoHashState;
 sp1_zkvm::entrypoint!(main);
 
-use alloy_sol_types::SolType;
-use fibonacci_lib::{fibonacci, PublicValuesStruct};
 
 pub fn main() {
-    // Read an input to the program.
-    //
-    // Behind the scenes, this compiles down to a custom system call which handles reading inputs
-    // from the prover.
-    let n = sp1_zkvm::io::read::<u32>();
+    let hash_state = sp1_zkvm::io::read::<IoHashState>();
+    let remaining = sp1_zkvm::io::read::<Vec<u8>>();
+    let target_hash = sp1_zkvm::io::read::<Vec<u8>>();
 
-    // Compute the n'th fibonacci number using a function from the workspace lib crate.
-    let (a, b) = fibonacci(n);
+    let mut h = Sha256::resume(HashState::Sha256(Sha256HashState {
+        h: hash_state.h,
+        message_len: hash_state.message_len,
+        block_len: hash_state.block_len,
+        current_block: {
+            let mut array = [0u8; 64];
+            let bytes = &hash_state.current_block[..array.len()];
+            array.copy_from_slice(bytes);
+            array
+        },
+    })).unwrap();
+    h.update(&remaining);
+    let digest = h.finish();
 
-    // Encode the public values of the program.
-    let bytes = PublicValuesStruct::abi_encode(&PublicValuesStruct { n, a, b });
-
-    // Commit to the public values of the program. The final proof will have a commitment to all the
-    // bytes that were committed to.
-    sp1_zkvm::io::commit_slice(&bytes);
+    let verified = if &digest[..] == target_hash {
+        true
+    } else {
+        false
+    };
+    sp1_zkvm::io::commit(&verified);
 }

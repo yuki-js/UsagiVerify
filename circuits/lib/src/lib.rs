@@ -1,12 +1,9 @@
-use alloy_sol_types::sol;
-
-sol! {
-    /// The public values encoded as a struct that can be easily deserialized inside Solidity.
-    struct PublicValuesStruct {
-        uint32 n;
-        uint32 a;
-        uint32 b;
-    }
+#[derive(serde::Serialize, serde::Deserialize, Debug)]
+pub struct IoHashState {
+    pub h: [u32; 8],
+    pub message_len: u64,
+    pub block_len: usize,
+    pub current_block: Vec<u8>,
 }
 
 /// Compute the n'th fibonacci number (wrapping around on overflows), using normal Rust code.
