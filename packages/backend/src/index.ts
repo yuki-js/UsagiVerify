@@ -1,31 +1,10 @@
 import { serve } from "@hono/node-server";
-import { Hono } from "hono";
-import { schema } from "./schema";
-import { tbValidator } from "@hono/typebox-validator";
-import { describeRoute } from "hono-openapi";
+import app from "./controller";
 
-const app = new Hono();
+export const honoApp = app;
 
-app.get(
-  "/",
-  describeRoute({
-    description: "Hello Hono!",
-    responses: {
-      200: {
-        content: {
-          "application/json": {
-            schema: schema,
-          },
-        },
-      },
-    },
-  }),
-  tbValidator("json", schema),
-  (c) => {
-    return c.text("Hello Hono!");
-  }
-);
+function main() {
+  serve(app);
+}
 
-export default app;
-
-serve(app);
+main();
