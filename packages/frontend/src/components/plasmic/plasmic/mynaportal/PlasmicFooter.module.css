@@ -1,0 +1,12 @@
+.root {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  width: 100%;
+  height: auto;
+  justify-content: center;
+  align-items: flex-end;
+  background: var(--token-_1zg35-WU29N);
+  min-height: 1em;
+  min-width: 0;
+}

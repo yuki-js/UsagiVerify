@@ -1,0 +1,269 @@
+{
+  "props": [
+    {
+      "name": "System: Bg Container",
+      "type": "color",
+      "value": "var(--antd-colorBgContainer)",
+      "category": "color",
+      "meta": {
+        "projectId": "3JWqxZzoKRrJsc2DDFbDv6",
+        "id": "upwb78o-WSVt"
+      }
+    },
+    {
+      "name": "System: Border",
+      "type": "color",
+      "value": "var(--antd-colorBorder)",
+      "category": "color",
+      "meta": {
+        "projectId": "3JWqxZzoKRrJsc2DDFbDv6",
+        "id": "0aj58W0uFS8R"
+      }
+    },
+    {
+      "name": "System: Error",
+      "type": "color",
+      "value": "var(--antd-colorError)",
+      "category": "color",
+      "meta": {
+        "projectId": "3JWqxZzoKRrJsc2DDFbDv6",
+        "id": "aCxOLlwTvAO0"
+      }
+    },
+    {
+      "name": "System: Error Active",
+      "type": "color",
+      "value": "var(--antd-colorErrorActive)",
+      "category": "color",
+      "meta": {
+        "projectId": "3JWqxZzoKRrJsc2DDFbDv6",
+        "id": "qvwX-Jo9KqfQ"
+      }
+    },
+    {
+      "name": "System: Error Bg",
+      "type": "color",
+      "value": "var(--antd-colorErrorBg)",
+      "category": "color",
+      "meta": {
+        "projectId": "3JWqxZzoKRrJsc2DDFbDv6",
+        "id": "0lvhrNkmKOff"
+      }
+    },
+    {
+      "name": "System: Error Border",
+      "type": "color",
+      "value": "var(--antd-colorErrorBorder)",
+      "category": "color",
+      "meta": {
+        "projectId": "3JWqxZzoKRrJsc2DDFbDv6",
+        "id": "o4e02XWSvzN1"
+      }
+    },
+    {
+      "name": "System: Heading3",
+      "type": "fontsize",
+      "value": "var(--antd-fontSizeHeading3)",
+      "category": "fontsize",
+      "meta": {
+        "projectId": "3JWqxZzoKRrJsc2DDFbDv6",
+        "id": "5-nhU6N_pnYd"
+      }
+    },
+    {
+      "name": "System: Heading4",
+      "type": "fontsize",
+      "value": "var(--antd-fontSizeHeading4)",
+      "category": "fontsize",
+      "meta": {
+        "projectId": "3JWqxZzoKRrJsc2DDFbDv6",
+        "id": "PRauFFHy9Y9J"
+      }
+    },
+    {
+      "name": "System: Heading5",
+      "type": "fontsize",
+      "value": "var(--antd-fontSizeHeading5)",
+      "category": "fontsize",
+      "meta": {
+        "projectId": "3JWqxZzoKRrJsc2DDFbDv6",
+        "id": "ikVXKyvMIAJz"
+      }
+    },
+    {
+      "name": "System: LG",
+      "type": "fontsize",
+      "value": "var(--antd-fontSizeLG)",
+      "category": "fontsize",
+      "meta": {
+        "projectId": "3JWqxZzoKRrJsc2DDFbDv6",
+        "id": "uX_jN036qu8J"
+      }
+    },
+    {
+      "name": "System: Padding XS",
+      "type": "spacing",
+      "value": "var(--antd-paddingXS)",
+      "category": "spacing",
+      "meta": {
+        "projectId": "3JWqxZzoKRrJsc2DDFbDv6",
+        "id": "jvvw4tPSo5c3"
+      }
+    },
+    {
+      "name": "System: Padding XXS",
+      "type": "spacing",
+      "value": "var(--antd-paddingXXS)",
+      "category": "spacing",
+      "meta": {
+        "projectId": "3JWqxZzoKRrJsc2DDFbDv6",
+        "id": "tEx_2NTVyeoU"
+      }
+    },
+    {
+      "name": "System: Text",
+      "type": "color",
+      "value": "var(--antd-colorText)",
+      "category": "color",
+      "meta": {
+        "projectId": "3JWqxZzoKRrJsc2DDFbDv6",
+        "id": "i9t2dhsubhu0"
+      }
+    },
+    {
+      "name": "System: Warning Bg",
+      "type": "color",
+      "value": "var(--antd-colorWarningBg)",
+      "category": "color",
+      "meta": {
+        "projectId": "3JWqxZzoKRrJsc2DDFbDv6",
+        "id": "L1YTiQQnYwR7"
+      }
+    },
+    {
+      "name": "System: XL",
+      "type": "fontsize",
+      "value": "var(--antd-fontSizeXL)",
+      "category": "fontsize",
+      "meta": {
+        "projectId": "3JWqxZzoKRrJsc2DDFbDv6",
+        "id": "2Nphg5fXgg5E"
+      }
+    },
+    {
+      "name": "background",
+      "type": "color",
+      "value": "#FFFFFF",
+      "category": "color",
+      "meta": {
+        "projectId": "3JWqxZzoKRrJsc2DDFbDv6",
+        "id": "NtyXNr_7wXgO"
+      }
+    },
+    {
+      "name": "containerWidth",
+      "type": "spacing",
+      "value": "768px",
+      "category": "spacing",
+      "meta": {
+        "projectId": "3JWqxZzoKRrJsc2DDFbDv6",
+        "id": "sQgyEoOp5ecc"
+      }
+    },
+    {
+      "name": "homeGridSpacing",
+      "type": "spacing",
+      "value": "16px",
+      "category": "spacing",
+      "meta": {
+        "projectId": "3JWqxZzoKRrJsc2DDFbDv6",
+        "id": "toCtcE5Uo53t"
+      }
+    },
+    {
+      "name": "scftBlue",
+      "type": "color",
+      "value": "#145B8F",
+      "category": "color",
+      "meta": {
+        "projectId": "3JWqxZzoKRrJsc2DDFbDv6",
+        "id": "EaCfcgNzr2MC"
+      }
+    },
+    {
+      "name": "scftBlueLt",
+      "type": "color",
+      "value": "#208FDF",
+      "category": "color",
+      "meta": {
+        "projectId": "3JWqxZzoKRrJsc2DDFbDv6",
+        "id": "_1zg35-WU29N"
+      }
+    },
+    {
+      "name": "scftBlueLtTp",
+      "type": "color",
+      "value": "#76C2F91A",
+      "category": "color",
+      "meta": {
+        "projectId": "3JWqxZzoKRrJsc2DDFbDv6",
+        "id": "GYwYjUxGjlzZ"
+      }
+    },
+    {
+      "name": "scftBlueTp",
+      "type": "color",
+      "value": "#145B8F1A",
+      "category": "color",
+      "meta": {
+        "projectId": "3JWqxZzoKRrJsc2DDFbDv6",
+        "id": "M96ZG4FZ5ri9"
+      }
+    },
+    {
+      "name": "scftGreen",
+      "type": "color",
+      "value": "#009F52",
+      "category": "color",
+      "meta": {
+        "projectId": "3JWqxZzoKRrJsc2DDFbDv6",
+        "id": "lSUBBXCwAjbG"
+      }
+    },
+    {
+      "name": "scftGreenLt",
+      "type": "color",
+      "value": "#FFFFFF",
+      "category": "color",
+      "meta": {
+        "projectId": "3JWqxZzoKRrJsc2DDFbDv6",
+        "id": "K-7VjHmr_Q-7"
+      }
+    },
+    {
+      "name": "scftRed",
+      "type": "color",
+      "value": "#E5000F",
+      "category": "color",
+      "meta": {
+        "projectId": "3JWqxZzoKRrJsc2DDFbDv6",
+        "id": "GD-jwFmOhNkm"
+      }
+    },
+    {
+      "name": "scftRedLt",
+      "type": "color",
+      "value": "#DC8085",
+      "category": "color",
+      "meta": {
+        "projectId": "3JWqxZzoKRrJsc2DDFbDv6",
+        "id": "ifpP1C7crBpj"
+      }
+    }
+  ],
+  "global": {
+    "meta": {
+      "source": "plasmic.app"
+    }
+  }
+}
