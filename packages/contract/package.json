@@ -1,0 +1,57 @@
+{
+  "name": "@usagiverify/contract",
+  "version": "1.0.0",
+  "description": "ERC6268 調査用のリポジトリ",
+  "private": true,
+  "license": "MIT",
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "format": "npx prettier --write .",
+    "clean": "npx hardhat clean",
+    "compile": "npx hardhat compile",
+    "test": "npx hardhat test",
+    "verify": "npx hardhat ignition verify",
+    "coverage": "SOLIDITY_COVERAGE=true npx hardhat coverage",
+    "deploy:ERC1155WithLockModule": "npx hardhat ignition deploy ./ignition/modules/ERC1155WithLock.ts --network sepolia",
+    "local": "npx hardhat node",
+    "getBalance": "npx hardhat getBalance --network sepolia",
+    "getChainInfo": "npx hardhat getChainInfo --network sepolia",
+    "getContractAddress": "npx hardhat getContractAddress --network sepolia",
+    "mint": "npx hardhat mint --network sepolia",
+    "lock": "npx hardhat lock --network sepolia",
+    "unlock": "npx hardhat unlock --network sepolia",
+    "transfer": "npx hardhat transfer --network sepolia"
+  },
+  "devDependencies": {
+    "@nomicfoundation/hardhat-ignition": "^0.15.0",
+    "@nomicfoundation/hardhat-ignition-viem": "^0.15.0",
+    "@nomicfoundation/hardhat-network-helpers": "^1.0.0",
+    "@nomicfoundation/hardhat-toolbox-viem": "^3.0.0",
+    "@nomicfoundation/hardhat-verify": "^2.0.0",
+    "@nomicfoundation/hardhat-viem": "^2.0.0",
+    "@types/chai": "^4.2.0",
+    "@types/chai-as-promised": "^7.1.6",
+    "@types/mocha": ">=9.1.0",
+    "@types/node": ">=18.0.0",
+    "chai": "^4.2.0",
+    "dotenv": "^16.4.5",
+    "hardhat": "^2.22.11",
+    "hardhat-gas-reporter": "^1.0.8",
+    "solhint": "^5.0.4",
+    "solidity-coverage": "^0.8.0",
+    "ts-node": ">=8.0.0",
+    "typescript": "~5.0.4",
+    "viem": "^2.21.55"
+  },
+  "dependencies": {
+    "@openzeppelin/contracts": "^5.2.0"
+  },
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "keywords": [],
+  "author": ""
+}

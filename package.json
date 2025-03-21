@@ -1,0 +1,19 @@
+{
+  "name": "usagiverify",
+  "version": "1.0.0",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "backend": "npm run -w @usagiverify/backend",
+    "contract": "npm run -w @usagiverify/contract",
+    "frontend": "npm run -w @usagiverify/frontend",
+    "circuits": "npm run -w @usagiverify/circuits",
+    "infrastructure": "npm run -w @usagiverify/infrastructure"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "UsagiVerify monorepo"
+}
