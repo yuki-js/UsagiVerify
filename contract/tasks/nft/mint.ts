@@ -8,6 +8,8 @@ import { getContractAddress } from "../../helpers/contractJsonHelper";
 task("mint", "mint ERC1155 NFT")
   .addParam("to", "mint wallet address")
   .addParam("id", "token ID of NFT")
+  .addParam("amount", "amount of NFT")
+  .addParam("uri", "token URI")
   .setAction(async (taskArgs, hre: HardhatRuntimeEnvironment) => {
     console.log(
       "################################### [START] ###################################"
@@ -37,7 +39,12 @@ task("mint", "mint ERC1155 NFT")
     );
 
     // call mint method
-    const hash = await nft.write.mint([taskArgs.to, BigInt(taskArgs.id)]);
+    const hash = await nft.write.mint([
+      taskArgs.to,
+      BigInt(taskArgs.id),
+      BigInt(taskArgs.amount),
+      taskArgs.uri,
+    ]);
 
     console.log(`
       tx Hash: ${hash}
