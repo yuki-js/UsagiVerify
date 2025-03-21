@@ -28,8 +28,8 @@ npm i
 
   ```txt
   PRIVATE_KEY=""
-  ARBITRUM_ETHERSCAN_KEY=""
-  BASESCAN_API_KEY=""
+  ETHERSCAN_API_KEY=""
+  INFURA_API_KEY=""
   ```
 
 - compile
