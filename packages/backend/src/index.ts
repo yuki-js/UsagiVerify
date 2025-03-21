@@ -1,12 +1,10 @@
 import { serve } from "@hono/node-server";
-import { Hono } from "hono";
+import app from "./controller";
 
-const app = new Hono();
+export const honoApp = app;
 
-app.get("/", (c) => {
-  return c.text("Hello Hono!");
-});
+function main() {
+  serve(app);
+}
 
-export default app;
-
-serve(app);
+main();
