@@ -8,14 +8,13 @@
 #![no_main]
 
 use streamsha::{ hash_state::{HashState, Sha256HashState}, traits::{Resumable, StreamHasher}, Sha256};
-use usagiverify_lib::IoHashState;
+use usagiverify_lib::{verify_doc, IoHashState};
 sp1_zkvm::entrypoint!(main);
-
 
 pub fn main() {
     let hash_state = sp1_zkvm::io::read::<IoHashState>();
     let remaining = sp1_zkvm::io::read::<Vec<u8>>();
-    let target_hash = sp1_zkvm::io::read::<Vec<u8>>();
+    let signature = sp1_zkvm::io::read::<Vec<u8>>();
 
     let mut h = Sha256::resume(HashState::Sha256(Sha256HashState {
         h: hash_state.h,
@@ -31,10 +30,6 @@ pub fn main() {
     h.update(&remaining);
     let digest = h.finish();
 
-    let verified = if &digest[..] == target_hash {
-        true
-    } else {
-        false
-    };
+    let verified = verify_doc(&digest, &signature);
     sp1_zkvm::io::commit(&verified);
 }

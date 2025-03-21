@@ -1,3 +1,7 @@
+use rsa::{pkcs1v15::{Signature, VerifyingKey}, BigUint, RsaPublicKey};
+use sha2::Sha256;
+use rsa::signature::Verifier;
+
 #[derive(serde::Serialize, serde::Deserialize, Debug)]
 pub struct IoHashState {
     pub h: [u32; 8],
@@ -6,14 +10,19 @@ pub struct IoHashState {
     pub current_block: Vec<u8>,
 }
 
-/// Compute the n'th fibonacci number (wrapping around on overflows), using normal Rust code.
-pub fn fibonacci(n: u32) -> (u32, u32) {
-    let mut a = 0u32;
-    let mut b = 1u32;
-    for _ in 0..n {
-        let c = a.wrapping_add(b);
-        a = b;
-        b = c;
-    }
-    (a, b)
+pub fn verify_doc(
+    hash: &[u8],
+    signature: &[u8],
+) -> bool {
+    let doc_verify_pubkey = RsaPublicKey::new_unchecked(
+        BigUint::new(vec![
+            0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07,
+            0x08, 0x09, 0x0A, 0x0B, 0x0C, 0x0D, 0x0E, 0x0F,
+        ]),
+        BigUint::new(vec![
+            0x01, 0x00, 0x01,
+        ])
+    );
+    let s = Signature::try_from(signature).unwrap();
+    VerifyingKey::<Sha256>::new(doc_verify_pubkey).verify(&hash, &s).is_ok()
 }

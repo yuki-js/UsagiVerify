@@ -8,4 +8,3 @@ alloy-sol-types = { workspace = true }
 sp1-zkvm = "4.0.0"
 usagiverify-lib = { path = "../lib" }
 streamsha = "1.0.0"
-rsa = { git = "https://github.com/sp1-patches/RustCrypto-RSA/", tag = "patch-0.9.6-sp1-4.0.0" }
