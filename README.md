@@ -8,6 +8,8 @@
 
 ## Live Demo
 
+[https://9beb5d7a.usagiverify.pages.dev/](https://9beb5d7a.usagiverify.pages.dev/)
+
 ## Demo Video
 
 ## How to work
