@@ -1,6 +1,7 @@
 "use client";
 
 import ConnectInitialScreen from "@/components/ConnectInitialScreen";
+import NFTGallery from "@/components/NFTGallery";
 import Prove from "@/components/Prove";
 import QrCodeScreen from "@/components/QrCodeScreen";
 import ServiceConnectionScreen from "@/components/ServiceConnectionScreen";
@@ -40,6 +41,7 @@ export default function Page() {
       {connectionStep === 2 && <ServiceConnectionScreen />}
       {connectionStep === 3 && <QrCodeScreen />}
       {connectionStep === 4 && <Prove />}
+      {connectionStep === 5 && <NFTGallery />}
     </main>
   );
 }
