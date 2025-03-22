@@ -1,9 +1,9 @@
 "use client";
 
-import { connectionStepAtom } from "@/atoms";
 import ConnectInitialScreen from "@/components/ConnectInitialScreen";
 import QrCodeScreen from "@/components/QrCodeScreen";
 import ServiceConnectionScreen from "@/components/ServiceConnectionScreen";
+import { connectionStepAtom } from "@/lib/atoms";
 import { honoApp } from "@usagiverify/backend";
 import { hc } from "hono/client";
 import { useAtom } from "jotai";

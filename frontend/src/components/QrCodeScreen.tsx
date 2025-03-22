@@ -1,6 +1,6 @@
 import { useAtom } from "jotai";
 import React from "react";
-import { connectionStepAtom } from "../atoms";
+import { connectionStepAtom } from "../lib/atoms";
 
 /**
  * QrCodeScreen component

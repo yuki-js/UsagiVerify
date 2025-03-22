@@ -1,7 +1,17 @@
 import { useAtom } from "jotai";
 import React from "react";
-import { connectionStepAtom } from "../atoms";
-import { ServiceConnectionInfo } from "../types";
+import { connectionStepAtom } from "../lib/atoms";
+import { ServiceConnectionInfo } from "../util/types";
+
+const serviceInfo: ServiceConnectionInfo = {
+  provider: "Ubie株式会社",
+  serviceDescription: "症状検索エンジン「ユビー」",
+  dataAccess: [
+    "保険医療機関・保険薬局等にて処方された薬剤の情報",
+    "健診実施機関で受診した健診情報等",
+    "保険医療機関・保険薬局等にて支払った医療費の情報",
+  ],
+};
 
 /**
  * ServiceConnectionScreen Component
@@ -13,16 +23,6 @@ const ServiceConnectionScreen: React.FC = () => {
   const [verificationMethod, setVerificationMethod] = React.useState<
     "ic" | "qr"
   >("qr");
-
-  const serviceInfo: ServiceConnectionInfo = {
-    provider: "Ubie株式会社",
-    serviceDescription: "症状検索エンジン「ユビー」",
-    dataAccess: [
-      "保険医療機関・保険薬局等にて処方された薬剤の情報",
-      "健診実施機関で受診した健診情報等",
-      "保険医療機関・保険薬局等にて支払った医療費の情報",
-    ],
-  };
 
   /**
    * Handle QR verification method
