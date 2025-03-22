@@ -57,7 +57,7 @@ ERC6268 調査用のリポジトリ
 - NFT をミント
 
   ```bash
-  npx hardhat mint --to 0x51908F598A5e0d8F1A3bAbFa6DF76F9704daD072 --id 0 --amount 1 --uri https://bafkreif7hoezwvq3wugnyglntmijxamfxml6odljjenfuszazqv64x6b2m.ipfs.nftstorage.link/ --network sepolia
+  npx hardhat mint --to 0x51908F598A5e0d8F1A3bAbFa6DF76F9704daD072 --id 0 --amount 1 --uri https://chocolate-nice-gazelle-823.mypinata.cloud/ipfs/bafkreibqlgz36cado4gmjf5nfbrltkxuz5z2merrcd73caay7xhvtbapem --network sepolia
   ```
 
 - NFT を Lock する
