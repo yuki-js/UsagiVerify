@@ -18,15 +18,13 @@ spec:
         - name: backend
           image: ghcr.io/yuki-js/usagiverify/backend:latest
           env:
-            - name: NFIGURE_FILE
-              value: "/app/config/config.json"
+            - name: NFIGURE_JSON
+              valueFrom:
+                configMapKeyRef:
+                  name: backend-config
+                  key: config.json
           ports:
             - containerPort: 5000
-          volumeMounts:
-            - name: backend-config
-              mountPath: /app/config
-              subPath: config.json
-              readOnly: true
           livenessProbe:
             httpGet:
               path: /healthz
@@ -35,10 +33,6 @@ spec:
             httpGet:
               path: /healthz
               port: 5000
-      volumes:
-        - name: backend-config
-          configMap:
-            name: backend-config
 ---
 apiVersion: v1
 kind: Service
