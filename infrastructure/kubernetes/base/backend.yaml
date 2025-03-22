@@ -19,12 +19,12 @@ spec:
           image: ghcr.io/yuki-js/usagiverify/backend:latest
           env:
             - name: NFIGURE_FILE
-              value: "/app/config.json"
+              value: "/app/config/config.json"
           ports:
             - containerPort: 5000
           volumeMounts:
             - name: backend-config
-              mountPath: /app
+              mountPath: /app/config
               subPath: config.json
               readOnly: true
           livenessProbe:
