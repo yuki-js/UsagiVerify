@@ -1,6 +1,7 @@
 "use client";
 
 import ConnectInitialScreen from "@/components/ConnectInitialScreen";
+import Prove from "@/components/Prove";
 import QrCodeScreen from "@/components/QrCodeScreen";
 import ServiceConnectionScreen from "@/components/ServiceConnectionScreen";
 import { connectionStepAtom } from "@/lib/atoms";
@@ -38,6 +39,7 @@ export default function Page() {
       {connectionStep === 1 && <ConnectInitialScreen />}
       {connectionStep === 2 && <ServiceConnectionScreen />}
       {connectionStep === 3 && <QrCodeScreen />}
+      {connectionStep === 4 && <Prove />}
     </main>
   );
 }
