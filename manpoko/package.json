@@ -1,0 +1,37 @@
+{
+  "name": "@usagiverify/manpoko",
+  "version": "1.0.0",
+  "private": true,
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "scripts": {
+    "clean": "rm -rf ./dist",
+    "build": "npm run clean && npm run build:types && npm run build:runtime",
+    "build:types": "tsc",
+    "build:runtime": "node build.js",
+    "start": "node dist/index.cjs",
+    "dev": "nodemon --watch src --exec 'npm run build:runtime && npm run start' --ext ts"
+  },
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "package.json"
+  ],
+  "type": "module",
+  "dependencies": {
+    "@hono/node-server": "^1.13.7",
+    "@hono/typebox-validator": "^0.3.2",
+    "@kintaman-co/nfigure": "^0.1.5",
+    "@kintaman-co/nfigure-typebox": "^0.1.6",
+    "@sinclair/typebox": "^0.34.30",
+    "hono": "^4.6.14"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.2",
+    "esbuild": "^0.25.1",
+    "nodemon": "^3.1.9",
+    "typescript": "^5.8.2"
+  }
+}
