@@ -22,6 +22,8 @@ npm i
 
 ### smartContract
 
+Please exeucte under `contract` folder.
+
 - Setup
 
   ```bash
@@ -37,45 +39,49 @@ npm i
 - compile
 
   ```bash
-  npm run contract compile
+  npm run compile
   ```
 
 - test
 
   ```bash
-  npm run contract test
+  npm run test
   ```
 
 - deploy ERC1155WithLock
 
   ```bash
-  npm run contract deploy:ERC1155WithLockModule
+  npm run deploy:ERC1155WithLockModule
   ```
 
 - verify
 
   ```bash
-  npm run contract verify chain-11155111
+  npm run verify chain-11155111
   ```
 
 ### backend
 
+Please exeucte under `backend` folder.
+
 - start local server
 
   ```bash
-  npm run backend dev
+  npm run dev
   ```
 
 ### frontend
 
+Please exeucte under `frontend` folder.
+
 - build
 
   ```bash
-  npm run frontend build
+  npm run build
   ```
 
 - local start
 
   ```bash
-  npm run frontend dev
+  npm run dev
   ```
