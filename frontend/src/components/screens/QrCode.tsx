@@ -1,18 +1,23 @@
-import { useAtom } from "jotai";
+import Router from "next/router";
 import React, { useEffect, useState } from "react";
-import { connectionStepAtom } from "../lib/atoms";
+import { Screen } from "../ui/Screen";
+import { Panel } from "../ui/Panel";
+import { Card } from "../ui/Card";
+import { Button } from "../ui/Button";
 
 /**
  * QrCodeScreen component with authentication effect
  * @returns
  */
 const QrCodeScreen: React.FC = () => {
-  const [_, setConnectionStep] = useAtom(connectionStepAtom);
   const [scanState, setScanState] = useState<
     "idle" | "scanning" | "authenticating" | "success"
   >("idle");
   const [progress, setProgress] = useState(0);
 
+  const goToNextStep = () => {
+    Router.push("/addr-reg");
+  };
   // Effect for auto transition after some seconds
   useEffect(() => {
     if (scanState === "idle") return;
@@ -39,12 +44,12 @@ const QrCodeScreen: React.FC = () => {
     } else if (scanState === "success") {
       // After success, wait 1 second before navigation
       timer = setTimeout(() => {
-        setConnectionStep(4);
+        goToNextStep();
       }, 1000);
     }
 
     return () => clearTimeout(timer);
-  }, [scanState, progress, setConnectionStep]);
+  }, [scanState, progress]);
 
   /**
    * Handle refresh QR code method
@@ -59,8 +64,7 @@ const QrCodeScreen: React.FC = () => {
    * Handle back button click method
    */
   const handleBack = () => {
-    // ステータスをリセットして前の画面に戻る
-    setConnectionStep(2);
+    Router.push("/service-connection");
   };
 
   /**
@@ -71,12 +75,8 @@ const QrCodeScreen: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-900 to-blue-900 text-white p-4">
-      {/* Background effects */}
-      <div className="absolute top-20 left-20 w-64 h-64 rounded-full bg-blue-400 opacity-10 blur-xl"></div>
-      <div className="absolute bottom-20 right-20 w-72 h-72 rounded-full bg-indigo-300 opacity-10 blur-xl"></div>
-
-      <div className="max-w-3xl mx-auto bg-white/10 backdrop-blur-sm border border-white/20 rounded-lg shadow-lg p-6 relative z-10">
+    <Screen>
+      <Panel>
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center">
             <h1 className="text-lg font-bold mr-2">My Portal</h1>
@@ -114,7 +114,7 @@ const QrCodeScreen: React.FC = () => {
           </p>
         </div>
 
-        <div className="mb-8 bg-white/5 p-5 rounded-lg border border-white/10">
+        <Card>
           <a
             href="#"
             className="text-blue-300 flex items-center mb-6 hover:text-blue-200 transition-colors"
@@ -302,9 +302,9 @@ const QrCodeScreen: React.FC = () => {
               Refresh QR code
             </button>
           </div>
-        </div>
+        </Card>
 
-        <div className="mb-8 bg-white/5 p-5 rounded-lg border border-white/10">
+        <Card>
           <h3 className="text-xl font-bold mb-4 text-blue-100">
             How to scan the QR code
           </h3>
@@ -385,21 +385,15 @@ const QrCodeScreen: React.FC = () => {
               </div>
             </li>
           </ol>
-        </div>
+        </Card>
 
         <div className="flex justify-center">
-          <button
-            onClick={handleBack}
-            className={`px-8 py-3 rounded-full font-medium bg-white/5 hover:bg-white/10 border border-white/20 text-gray-200 transition-all ${
-              scanState !== "idle" ? "opacity-50 cursor-not-allowed" : ""
-            }`}
-            disabled={scanState !== "idle"}
-          >
+          <Button onClick={handleBack} disabled={scanState !== "idle"}>
             Back
-          </button>
+          </Button>
         </div>
-      </div>
-    </div>
+      </Panel>
+    </Screen>
   );
 };
 

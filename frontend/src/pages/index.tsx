@@ -1,23 +1,16 @@
 "use client";
 
-import ConnectInitialScreen from "@/components/ConnectInitialScreen";
-import Prove from "@/components/Prove";
-import QrCodeScreen from "@/components/QrCodeScreen";
-import ServiceConnectionScreen from "@/components/ServiceConnectionScreen";
-import { connectionStepAtom } from "@/lib/atoms";
+import ConnectInitialScreen from "@/components/screens/Initial";
 import { honoApp } from "@usagiverify/backend";
 import { hc } from "hono/client";
-import { useAtom } from "jotai";
 import { useEffect } from "react";
 
 /**
- * Home component
- * @returns
+ * Home component - Initial connection screen
  */
 export default function Page() {
-  const [connectionStep] = useAtom(connectionStepAtom);
-
   useEffect(() => {
+    // Initialize API client
     const client = hc<typeof honoApp>("http://localhost:3000");
     client.index
       .$get({
@@ -31,15 +24,15 @@ export default function Page() {
         console.log(res.status);
         console.log(res.body);
         console.log(res.headers);
+      })
+      .catch((err) => {
+        console.error(err);
       });
   }, []);
 
   return (
     <main>
-      {connectionStep === 1 && <ConnectInitialScreen />}
-      {connectionStep === 2 && <ServiceConnectionScreen />}
-      {connectionStep === 3 && <QrCodeScreen />}
-      {connectionStep === 4 && <Prove />}
+      <ConnectInitialScreen />
     </main>
   );
 }

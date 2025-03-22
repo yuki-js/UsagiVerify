@@ -1,28 +1,25 @@
 import { useAtom } from "jotai";
+import Router from "next/router";
 import React from "react";
-import { connectionStepAtom } from "../lib/atoms";
+import { Screen } from "../ui/Screen";
+import { Panel } from "../ui/Panel";
+import { Button } from "../ui/Button";
 
 /**
  * ConnectInitialScreen component
  * @returns
  */
 const ConnectInitialScreen: React.FC = () => {
-  const [_, setConnectionStep] = useAtom(connectionStepAtom);
-
   /**
    * Handle connect button click method
    */
   const handleConnect = () => {
-    setConnectionStep(2);
+    Router.push("/authorize");
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen p-4 bg-gradient-to-br from-indigo-900 to-blue-900 text-white">
-      {/* 背景効果 */}
-      <div className="absolute top-20 left-20 w-64 h-64 rounded-full bg-blue-400 opacity-10 blur-xl"></div>
-      <div className="absolute bottom-20 right-20 w-72 h-72 rounded-full bg-indigo-300 opacity-10 blur-xl"></div>
-
-      <div className="w-full max-w-3xl border border-white/20 rounded-lg shadow-lg bg-white/10 backdrop-blur-sm relative z-10 overflow-hidden">
+    <Screen>
+      <Panel>
         <div className="py-12 px-4">
           <h1 className="text-xl font-medium text-center mb-6">
             Step 1. Connect to Mynaportal
@@ -59,16 +56,11 @@ const ConnectInitialScreen: React.FC = () => {
           </div>
 
           <div className="flex justify-center">
-            <button
-              onClick={handleConnect}
-              className="px-8 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white rounded-full font-medium shadow-lg shadow-blue-900/30 transition-all hover:scale-105"
-            >
-              Connect to Mynaportal
-            </button>
+            <Button onClick={handleConnect}>Connect to Mynaportal</Button>
           </div>
         </div>
-      </div>
-    </div>
+      </Panel>
+    </Screen>
   );
 };
 

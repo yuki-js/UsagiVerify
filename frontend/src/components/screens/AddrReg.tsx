@@ -1,7 +1,6 @@
-import { connectionStepAtom } from "@/lib/atoms";
-import { useAtom } from "jotai";
 import React, { useState } from "react";
-import { LoadingSpinner } from "./LoadingSpinner";
+import { LoadingSpinner } from "../LoadingSpinner";
+import Router from "next/router";
 
 /**
  * Prove Component
@@ -9,7 +8,7 @@ import { LoadingSpinner } from "./LoadingSpinner";
  */
 const Prove: React.FC = () => {
   const [address, setAddress] = useState<string>("");
-  const [_, setConnectionStep] = useAtom(connectionStepAtom);
+
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const handleAddressChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -28,7 +27,7 @@ const Prove: React.FC = () => {
       // ここでZKproof生成ロジックのAPIを呼びだす。
 
       // 成功したら次のステップに進む
-      setConnectionStep(5);
+      Router.push("/wait-for-proof");
     } catch (error) {
       console.error("Error during prove process:", error);
     } finally {

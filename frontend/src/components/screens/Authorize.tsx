@@ -1,7 +1,11 @@
-import { useAtom } from "jotai";
 import React from "react";
-import { connectionStepAtom } from "../lib/atoms";
-import { ServiceConnectionInfo } from "../util/types";
+
+import { ServiceConnectionInfo } from "../../util/types";
+import Router from "next/router";
+import { Panel } from "../ui/Panel";
+import { Card } from "../ui/Card";
+import { Button } from "../ui/Button";
+import { Screen } from "../ui/Screen";
 
 const serviceInfo: ServiceConnectionInfo = {
   provider: "Ubie株式会社",
@@ -18,7 +22,6 @@ const serviceInfo: ServiceConnectionInfo = {
  * @returns
  */
 const ServiceConnectionScreen: React.FC = () => {
-  const [_, setConnectionStep] = useAtom(connectionStepAtom);
   const [agreeToTerms, setAgreeToTerms] = React.useState(false);
   const [verificationMethod, setVerificationMethod] = React.useState<
     "ic" | "qr"
@@ -29,17 +32,13 @@ const ServiceConnectionScreen: React.FC = () => {
    */
   const handleQrVerification = () => {
     if (agreeToTerms && verificationMethod === "qr") {
-      setConnectionStep(3);
+      Router.push("/qr-code");
     }
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-900 to-blue-900 text-white p-4">
-      {/* 背景効果 */}
-      <div className="absolute top-20 left-20 w-64 h-64 rounded-full bg-blue-400 opacity-10 blur-xl"></div>
-      <div className="absolute bottom-20 right-20 w-72 h-72 rounded-full bg-indigo-300 opacity-10 blur-xl"></div>
-
-      <div className="max-w-3xl mx-auto bg-white/10 backdrop-blur-sm border border-white/20 rounded-lg shadow-lg p-6 relative z-10">
+    <Screen>
+      <Panel>
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center">
             <h1 className="text-lg font-bold mr-2">マイナポータル</h1>
@@ -74,7 +73,7 @@ const ServiceConnectionScreen: React.FC = () => {
           </p>
         </div>
 
-        <div className="mb-8 bg-white/5 p-5 rounded-lg border border-white/10">
+        <Card>
           <h3 className="text-xl font-bold mb-4 text-blue-100">連携内容</h3>
           <p className="mb-4 text-gray-200">
             {serviceInfo.provider}が提供する{serviceInfo.serviceDescription}
@@ -108,9 +107,9 @@ const ServiceConnectionScreen: React.FC = () => {
               </li>
             ))}
           </ul>
-        </div>
+        </Card>
 
-        <div className="mb-8 bg-white/5 p-5 rounded-lg border border-white/10">
+        <Card>
           <h3 className="text-xl font-bold mb-4 text-blue-100">同意事項</h3>
           <a
             href="#"
@@ -144,9 +143,9 @@ const ServiceConnectionScreen: React.FC = () => {
               <span className="text-gray-200">利用規約に同意する</span>
             </label>
           </div>
-        </div>
+        </Card>
 
-        <div className="mb-8 bg-white/5 p-5 rounded-lg border border-white/10">
+        <Card>
           <h3 className="text-xl font-bold mb-4 text-blue-100">
             本人確認方法の選択
           </h3>
@@ -259,23 +258,15 @@ const ServiceConnectionScreen: React.FC = () => {
               </div>
             </label>
           </div>
-        </div>
+        </Card>
 
         <div className="flex justify-center">
-          <button
-            onClick={handleQrVerification}
-            className={`px-8 py-3 rounded-full font-medium shadow-lg transition-all ${
-              agreeToTerms
-                ? "bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white shadow-blue-900/30 hover:scale-105"
-                : "bg-gray-600/50 text-gray-400 cursor-not-allowed"
-            }`}
-            disabled={!agreeToTerms}
-          >
+          <Button onClick={handleQrVerification} disabled={!agreeToTerms}>
             次へ進む
-          </button>
+          </Button>
         </div>
-      </div>
-    </div>
+      </Panel>
+    </Screen>
   );
 };
 
