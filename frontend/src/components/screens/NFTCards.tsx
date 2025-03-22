@@ -52,11 +52,6 @@ const NFTCards: React.FC = () => {
     setShowModal(false);
   };
 
-  const handleBack = () => {
-    // Logic to navigate back
-    console.log("Navigate back");
-  };
-
   return (
     <Screen>
       <Panel>
@@ -78,13 +73,7 @@ const NFTCards: React.FC = () => {
                 onClick={() => handleNftClick(nft.id)}
               >
                 <div className="w-full aspect-square bg-black rounded-md overflow-hidden">
-                  <div className="w-full h-full flex items-center justify-center bg-gradient-to-r from-green-500 via-blue-500 to-purple-500 p-2">
-                    <div className="w-full h-full flex items-center justify-center bg-black/70 rounded">
-                      <div className="text-yellow-400 font-bold text-lg">
-                        {nft.type}
-                      </div>
-                    </div>
-                  </div>
+                  <img src="logo.png" />
                 </div>
 
                 {nft.id === 19 && (
@@ -106,23 +95,7 @@ const NFTCards: React.FC = () => {
             <div className="p-8 bg-gray-50 flex flex-col md:flex-row gap-8">
               <div className="w-full md:w-1/3 flex justify-center">
                 <div className="w-48 h-48 bg-black rounded-md overflow-hidden">
-                  <div className="w-full h-full flex items-center justify-center bg-gradient-to-r from-green-500 via-blue-500 to-purple-500 p-4">
-                    <div className="w-full h-full flex items-center justify-center bg-black/70 rounded-md">
-                      <div className="relative">
-                        <div className="w-12 h-12 rounded-full bg-gradient-to-r from-green-500 via-blue-500 to-purple-500 flex items-center justify-center">
-                          <div className="text-white transform -rotate-45">
-                            ✓
-                          </div>
-                        </div>
-                        <div className="absolute top-0 w-full h-full flex items-center justify-center">
-                          <div className="w-10 h-5 bg-gradient-to-r from-lime-400 to-yellow-400 rounded-t-full"></div>
-                        </div>
-                        <div className="absolute top-0 w-full h-full flex items-center justify-center">
-                          <div className="w-10 h-5 bg-gradient-to-r from-lime-400 to-orange-400 rounded-t-full transform rotate-30"></div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+                  <img src="logo.png" />
                 </div>
               </div>
 
@@ -131,7 +104,6 @@ const NFTCards: React.FC = () => {
                   医療費 Tier {modalNft.tier}
                 </h2>
                 <p className="mb-6 text-gray-800">{modalNft.description}</p>
-
                 <Button onClick={handleCloseModal}>ボタン</Button>
               </div>
             </div>
