@@ -28,8 +28,22 @@ const ConnectInitialScreen: React.FC = () => {
           <p className="text-center mb-6 text-gray-700">Mynaportal is ...</p>
 
           <Carousel>
-            <div></div>
-            <div></div>
+            <div className="bg-purple-600 flex items-center justify-center flex-grow h-64 rounded-lg">
+              <div className="bg-yellow-50/90 p-6 w-64 mx-auto backdrop-blur-sm rounded-md">
+                <h3 className="text-lg font-medium mb-4 text-gray-800">
+                  説明力ルーセル
+                </h3>
+                <div className="text-sm text-gray-700">青木ゆうき</div>
+              </div>
+            </div>
+            <div>
+              <div className="bg-yellow-50/90 p-6 w-64 mx-auto backdrop-blur-sm rounded-md">
+                <h3 className="text-lg font-medium mb-4 text-gray-800">
+                  説明力ルーセル2
+                </h3>
+                <div className="text-sm text-gray-700">青木ゆうき</div>
+              </div>
+            </div>
           </Carousel>
 
           <div className="flex justify-center">
