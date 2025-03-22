@@ -41,13 +41,15 @@ const ServiceConnectionScreen: React.FC = () => {
       <Panel>
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center">
-            <h1 className="text-lg font-bold mr-2">マイナポータル</h1>
-            <span className="text-sm text-gray-300">外部サービスとの連携</span>
+            <h1 className="text-lg font-bold mr-2 text-gray-800">
+              マイナポータル
+            </h1>
+            <span className="text-sm text-gray-600">外部サービスとの連携</span>
           </div>
           <div>
-            <button className="p-2 hover:bg-white/10 rounded-full transition-colors">
+            <button className="p-2 hover:bg-gray-100 rounded-full transition-colors">
               <svg
-                className="w-6 h-6"
+                className="w-6 h-6 text-blue-950"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -65,17 +67,17 @@ const ServiceConnectionScreen: React.FC = () => {
         </div>
 
         <div className="mb-8">
-          <h2 className="text-2xl font-bold mb-4 text-blue-100">
+          <h2 className="text-2xl font-bold mb-4 text-gray-800">
             サービス連携
           </h2>
-          <p className="mb-6 text-gray-200">
+          <p className="mb-6 text-gray-700">
             マイナポータルと利用中のサービスを連携します。連携内容と規約へ確認同意のうえ、まずは本人確認を行ってください。
           </p>
         </div>
 
         <Card>
-          <h3 className="text-xl font-bold mb-4 text-blue-100">連携内容</h3>
-          <p className="mb-4 text-gray-200">
+          <h3 className="text-xl font-bold mb-4 text-gray-800">連携内容</h3>
+          <p className="mb-4 text-gray-700">
             {serviceInfo.provider}が提供する{serviceInfo.serviceDescription}
             で医療情報を記録するために、マイナポータルから以下の情報を取得します。
           </p>
@@ -83,10 +85,10 @@ const ServiceConnectionScreen: React.FC = () => {
           <ul className="space-y-5">
             {serviceInfo.dataAccess.map((item, index) => (
               <li key={index} className="flex items-start">
-                <span className="mr-2 text-blue-300">-</span>
+                <span className="mr-2 text-gray-500">-</span>
                 <div>
-                  <div className="text-gray-100">{item}</div>
-                  <button className="text-blue-300 text-sm flex items-center mt-2 hover:text-blue-200 transition-colors">
+                  <div className="text-gray-800">{item}</div>
+                  <button className="text-blue-500 text-sm flex items-center mt-2 hover:text-blue-400 transition-colors">
                     詳細の項目
                     <svg
                       className="w-4 h-4 ml-1"
@@ -110,10 +112,10 @@ const ServiceConnectionScreen: React.FC = () => {
         </Card>
 
         <Card>
-          <h3 className="text-xl font-bold mb-4 text-blue-100">同意事項</h3>
+          <h3 className="text-xl font-bold mb-4 text-gray-800">同意事項</h3>
           <a
             href="#"
-            className="text-blue-300 flex items-center mb-4 hover:text-blue-200 transition-colors"
+            className="text-blue-500 flex items-center mb-4 hover:text-blue-400 transition-colors"
           >
             マイナポータルの利用規約
             <svg
@@ -132,7 +134,7 @@ const ServiceConnectionScreen: React.FC = () => {
             </svg>
           </a>
 
-          <div className="border border-white/20 bg-white/5 rounded-md p-4 mb-6">
+          <div className="border border-gray-300 bg-gray-100 rounded-md p-4 mb-6">
             <label className="flex items-start cursor-pointer">
               <input
                 type="checkbox"
@@ -140,21 +142,21 @@ const ServiceConnectionScreen: React.FC = () => {
                 checked={agreeToTerms}
                 onChange={(e) => setAgreeToTerms(e.target.checked)}
               />
-              <span className="text-gray-200">利用規約に同意する</span>
+              <span className="text-gray-700">利用規約に同意する</span>
             </label>
           </div>
         </Card>
 
         <Card>
-          <h3 className="text-xl font-bold mb-4 text-blue-100">
+          <h3 className="text-xl font-bold mb-4 text-gray-800">
             本人確認方法の選択
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <label
               className={`border ${
                 verificationMethod === "ic"
-                  ? "border-blue-400/50 bg-blue-900/20"
-                  : "border-white/20 bg-white/5"
+                  ? "border-blue-400/50 bg-blue-100"
+                  : "border-gray-300 bg-gray-100"
               } rounded-lg p-4 flex items-center justify-between cursor-pointer transition-all hover:border-blue-400/30`}
             >
               <div className="flex items-center">
@@ -165,11 +167,11 @@ const ServiceConnectionScreen: React.FC = () => {
                   checked={verificationMethod === "ic"}
                   onChange={() => setVerificationMethod("ic")}
                 />
-                <span className="text-gray-200">
+                <span className="text-gray-700">
                   ICカードリーダライタを使って本人確認
                 </span>
               </div>
-              <div className="text-blue-300">
+              <div className="text-blue-500">
                 <svg
                   className="w-10 h-10"
                   fill="none"
@@ -197,8 +199,8 @@ const ServiceConnectionScreen: React.FC = () => {
             <label
               className={`border ${
                 verificationMethod === "qr"
-                  ? "border-blue-400/50 bg-blue-900/20"
-                  : "border-white/20 bg-white/5"
+                  ? "border-blue-400/50 bg-blue-100"
+                  : "border-gray-300 bg-gray-100"
               } rounded-lg p-4 flex items-center justify-between cursor-pointer transition-all hover:border-blue-400/30`}
             >
               <div className="flex items-center">
@@ -209,11 +211,11 @@ const ServiceConnectionScreen: React.FC = () => {
                   checked={verificationMethod === "qr"}
                   onChange={() => setVerificationMethod("qr")}
                 />
-                <span className="text-gray-200">
+                <span className="text-gray-700">
                   スマートフォンでQRコードを読み取って本人確認
                 </span>
               </div>
-              <div className="text-blue-300">
+              <div className="text-blue-500">
                 <svg
                   className="w-10 h-10"
                   fill="none"

@@ -4,7 +4,7 @@ type Props = {
 
 export const Card = ({ children }: Props) => {
   return (
-    <div className="mb-8 bg-white/5 p-5 rounded-lg border border-white/10">
+    <div className="mb-8 bg-white/60 p-5 rounded-lg border border-black/25">
       {children}
     </div>
   );

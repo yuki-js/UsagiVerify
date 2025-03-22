@@ -64,7 +64,7 @@ const QrCodeScreen: React.FC = () => {
    * Handle back button click method
    */
   const handleBack = () => {
-    Router.push("/service-connection");
+    Router.back();
   };
 
   /**
