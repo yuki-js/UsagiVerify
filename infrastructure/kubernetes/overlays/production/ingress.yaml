@@ -7,11 +7,10 @@ metadata:
 spec:
   tls:
     - hosts:
-        - "usagiverify.mynacard.app"
-        - "*.usagiverify.mynacard.app"
+        - "*.ouchiserver.aokiapp.com"
       secretName: service-tls
   rules:
-    - host: backend.usagiverify.mynacard.app
+    - host: usagiverify.ouchiserver.aokiapp.com
       http:
         paths:
           - path: /
