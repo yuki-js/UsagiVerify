@@ -11,7 +11,7 @@
     "build": "npm run clean && npm run build:types && npm run build:runtime",
     "build:types": "tsc",
     "build:runtime": "node build.js",
-    "start": "node dist/index.mjs",
+    "start": "node dist/index.cjs",
     "dev": "nodemon --watch src --exec 'npm run build:runtime && npm run start' --ext ts"
   },
   "types": "dist/index.d.ts",

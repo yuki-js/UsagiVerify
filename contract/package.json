@@ -22,7 +22,8 @@
     "mint": "npx hardhat mint --network sepolia",
     "lock": "npx hardhat lock --network sepolia",
     "unlock": "npx hardhat unlock --network sepolia",
-    "transfer": "npx hardhat transfer --network sepolia"
+    "transfer": "npx hardhat transfer --network sepolia",
+    "build": "npx hardhat compile"
   },
   "devDependencies": {
     "@nomicfoundation/hardhat-ignition": "^0.15.0",
