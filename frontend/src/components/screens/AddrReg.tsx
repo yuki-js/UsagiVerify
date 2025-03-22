@@ -1,6 +1,10 @@
 import React, { useState } from "react";
 import { LoadingSpinner } from "../LoadingSpinner";
 import Router from "next/router";
+import { Panel } from "../ui/Panel";
+import { Card } from "../ui/Card";
+import { Button } from "../ui/Button";
+import { Screen } from "../ui/Screen";
 
 /**
  * Prove Component
@@ -8,7 +12,6 @@ import Router from "next/router";
  */
 const Prove: React.FC = () => {
   const [address, setAddress] = useState<string>("");
-
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const handleAddressChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -41,15 +44,11 @@ const Prove: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-900 to-blue-900 text-white p-4">
-      {/* Background effects */}
-      <div className="absolute top-20 left-20 w-64 h-64 rounded-full bg-blue-400 opacity-10 blur-xl"></div>
-      <div className="absolute bottom-20 right-20 w-72 h-72 rounded-full bg-indigo-300 opacity-10 blur-xl"></div>
-
+    <Screen>
       {isLoading ? (
         <LoadingSpinner />
       ) : (
-        <div className="max-w-3xl mx-auto bg-white/10 backdrop-blur-sm border border-white/20 rounded-lg shadow-lg p-6 relative z-10">
+        <Panel>
           <div className="flex items-center justify-between mb-6">
             <div className="flex items-center">
               <h1 className="text-lg font-bold mr-2">My Portal</h1>
@@ -86,7 +85,7 @@ const Prove: React.FC = () => {
             </p>
           </div>
 
-          <div className="mb-8 bg-white/5 p-5 rounded-lg border border-white/10">
+          <Card>
             <div className="flex flex-col items-center mb-6">
               <button className="w-64 bg-gradient-to-r from-blue-600 to-indigo-600 text-white py-3 px-6 rounded-md mb-5 shadow-lg shadow-blue-900/30 hover:brightness-110 transition-all">
                 Connect wallet
@@ -107,16 +106,11 @@ const Prove: React.FC = () => {
             </div>
 
             <div className="flex justify-center mb-4">
-              <button
-                onClick={handleProve}
-                className="px-10 py-2 rounded-md font-medium bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-lg shadow-blue-900/30 hover:brightness-110 transition-all"
-              >
-                prove
-              </button>
+              <Button onClick={handleProve}>prove</Button>
             </div>
-          </div>
+          </Card>
 
-          <div className="mb-8 bg-white/5 p-5 rounded-lg border border-white/10">
+          <Card>
             <h3 className="text-xl font-bold mb-4 text-blue-100">
               How to register EVM address
             </h3>
@@ -146,19 +140,14 @@ const Prove: React.FC = () => {
                 </div>
               </li>
             </ol>
-          </div>
+          </Card>
 
           <div className="flex justify-center">
-            <button
-              onClick={handleBack}
-              className="px-8 py-3 rounded-full font-medium bg-white/5 hover:bg-white/10 border border-white/20 text-gray-200 transition-all"
-            >
-              Back
-            </button>
+            <Button onClick={handleBack}>Back</Button>
           </div>
-        </div>
+        </Panel>
       )}
-    </div>
+    </Screen>
   );
 };
 
