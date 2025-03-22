@@ -1,8 +1,9 @@
 import { Hono } from "hono";
 import { cors } from "hono/cors";
 import { root } from "./root";
+import { healthz } from "./healthz";
 
-const app = new Hono().route("/", root);
+const app = new Hono().route("/", root).route("/", healthz);
 
 // CROS configuration
 app.use(
