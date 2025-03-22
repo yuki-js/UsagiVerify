@@ -8,11 +8,7 @@
     "contract"
   ],
   "scripts": {
-    "backend": "npm run -w @usagiverify/backend",
-    "contract": "npm run -w @usagiverify/contract",
-    "frontend": "npm run -w @usagiverify/frontend",
-    "circuits": "npm run -w @usagiverify/circuits",
-    "infrastructure": "npm run -w @usagiverify/infrastructure"
+    "build": "npm run -w backend build && npm run -w frontend build && npm run -w contract build"
   },
   "keywords": [],
   "author": "",
