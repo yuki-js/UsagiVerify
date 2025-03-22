@@ -9,10 +9,27 @@ import "./ERC6268.sol";
  */
 contract ERC1155WithLock is ERC6268, Ownable {
 
+  mapping(uint256 => string) public _tokenURIs;
+
   /**
    * コンストラクター
    */
   constructor(string memory _uri) ERC6268(_uri)Ownable(msg.sender) {}
+
+  /**
+   * トークンごとのURIを設定
+   */
+  function _setTokenURI(uint256 tokenId, string memory _uri) internal {
+    _tokenURIs[tokenId] = _uri;
+  }
+
+  /**
+   * トークンURIを取得
+   */
+  function uri(uint256 tokenId) public view override returns (string memory) {
+    return _tokenURIs[tokenId];
+  }
+
 
   /**
    * トークンIDをロックする（オーナーのみ実行可能）
@@ -21,11 +38,17 @@ contract ERC1155WithLock is ERC6268, Ownable {
     _lock(id);
   }
 
-   /**
+  /**
    * NFTをミントするメソッド
    */
-  function mint(address _to, uint256 _id) public {
-    _mint(_to, _id, 1, "");
+  function mint(
+    address _to,
+    uint256 _id,
+    uint256 _amount,
+    string memory _uri
+  ) public {
+    _mint(_to, _id, _amount, "");
+    _setTokenURI(_id, _uri);
   }
 
   /**

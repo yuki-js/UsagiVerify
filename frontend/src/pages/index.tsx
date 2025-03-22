@@ -1,7 +1,13 @@
 "use client";
 
+import ConnectInitialScreen from "@/components/ConnectInitialScreen";
+import Prove from "@/components/Prove";
+import QrCodeScreen from "@/components/QrCodeScreen";
+import ServiceConnectionScreen from "@/components/ServiceConnectionScreen";
+import { connectionStepAtom } from "@/lib/atoms";
 import { honoApp } from "@usagiverify/backend";
 import { hc } from "hono/client";
+import { useAtom } from "jotai";
 import { useEffect } from "react";
 
 /**
@@ -9,6 +15,8 @@ import { useEffect } from "react";
  * @returns
  */
 export default function Page() {
+  const [connectionStep] = useAtom(connectionStepAtom);
+
   useEffect(() => {
     const client = hc<typeof honoApp>("http://localhost:3000");
     client.index
@@ -26,5 +34,12 @@ export default function Page() {
       });
   }, []);
 
-  return <h1>Hello, Next.js!</h1>;
+  return (
+    <main>
+      {connectionStep === 1 && <ConnectInitialScreen />}
+      {connectionStep === 2 && <ServiceConnectionScreen />}
+      {connectionStep === 3 && <QrCodeScreen />}
+      {connectionStep === 4 && <Prove />}
+    </main>
+  );
 }

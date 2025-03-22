@@ -28,10 +28,11 @@ describe("ERC1155WithLock", () => {
 
   describe("Deployment", () => {
     it("Should set the right uri", async () => {
-      const { nft, TOKEN_URI } = await loadFixture(deployFixture);
+      const { nft } = await loadFixture(deployFixture);
+
       // Token URIが一致しているか確認する。
-      expect(await nft.read.uri([BigInt(0)])).to.equal(TOKEN_URI);
-      expect(await nft.read.uri([BigInt(1)])).to.equal(TOKEN_URI);
+      expect(await nft.read.uri([BigInt(0)])).to.equal("");
+      expect(await nft.read.uri([BigInt(1)])).to.equal("");
     });
 
     it("Should set balance 0", async () => {
@@ -54,7 +55,16 @@ describe("ERC1155WithLock", () => {
       const { nft, owner, otherAccount } = await loadFixture(deployFixture);
 
       // mint
-      await nft.write.mint([owner.account.address, 0n]);
+      await nft.write.mint([
+        owner.account.address,
+        0n,
+        1n,
+        "https://example.com/0",
+      ]);
+
+      // Token URIが一致しているか確認する。
+      expect(await nft.read.uri([BigInt(0)])).to.equal("https://example.com/0");
+
       // 残高をチェック
       expect(
         await nft.read.balanceOf([owner.account.address as `0x${string}`, 0n])
@@ -80,7 +90,12 @@ describe("ERC1155WithLock", () => {
       const { nft, owner, otherAccount } = await loadFixture(deployFixture);
 
       // mint
-      await nft.write.mint([owner.account.address, 0n]);
+      await nft.write.mint([
+        owner.account.address,
+        0n,
+        1n,
+        "https://example.com/0",
+      ]);
       // 残高をチェック
       expect(
         await nft.read.balanceOf([owner.account.address as `0x${string}`, 0n])
@@ -130,8 +145,22 @@ describe("ERC1155WithLock", () => {
       const { nft, owner, otherAccount } = await loadFixture(deployFixture);
 
       // mint (Token ID 0 & 1)
-      await nft.write.mint([owner.account.address, 0n]);
-      await nft.write.mint([owner.account.address, 1n]);
+      await nft.write.mint([
+        owner.account.address,
+        0n,
+        1n,
+        "https://example.com/0",
+      ]);
+      await nft.write.mint([
+        owner.account.address,
+        1n,
+        1n,
+        "https://example.com/1",
+      ]);
+
+      // Token URIが一致しているか確認する。
+      expect(await nft.read.uri([BigInt(0)])).to.equal("https://example.com/0");
+      expect(await nft.read.uri([BigInt(1)])).to.equal("https://example.com/1");
 
       // 残高をチェック
       expect(
