@@ -24,7 +24,8 @@ spec:
             - containerPort: 5000
           volumeMounts:
             - name: backend-config
-              mountPath: /app/config.json
+              mountPath: /app
+              subPath: config.json
               readOnly: true
           livenessProbe:
             httpGet:
