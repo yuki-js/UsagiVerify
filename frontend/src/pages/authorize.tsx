@@ -1,8 +1,11 @@
 "use client";
 
 import ServiceConnectionScreen from "@/components/screens/Authorize";
-import { useRouter } from "next/router";
 
+/**
+ * ServiceConnectionPage component - Service connection screen
+ * @returns
+ */
 export default function ServiceConnectionPage() {
   return (
     <main>

@@ -2,6 +2,11 @@ import React from "react";
 
 type Props = React.ComponentProps<"button">;
 
+/**
+ * Button component
+ * @param param0
+ * @returns
+ */
 export const Button = ({ disabled, ...props }: Props) => {
   return (
     <button

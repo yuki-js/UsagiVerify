@@ -1,10 +1,10 @@
 import React from "react";
 
-import { ServiceConnectionInfo } from "../../util/types";
 import Router from "next/router";
-import { Panel } from "../ui/Panel";
-import { Card } from "../ui/Card";
+import { ServiceConnectionInfo } from "../../util/types";
 import { Button } from "../ui/Button";
+import { Card } from "../ui/Card";
+import { Panel } from "../ui/Panel";
 import { Screen } from "../ui/Screen";
 
 const serviceInfo: ServiceConnectionInfo = {

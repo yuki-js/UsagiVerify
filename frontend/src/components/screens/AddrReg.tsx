@@ -1,9 +1,9 @@
+import Router from "next/router";
 import React, { useState } from "react";
 import { LoadingSpinner } from "../LoadingSpinner";
-import Router from "next/router";
-import { Panel } from "../ui/Panel";
-import { Card } from "../ui/Card";
 import { Button } from "../ui/Button";
+import { Card } from "../ui/Card";
+import { Panel } from "../ui/Panel";
 import { Screen } from "../ui/Screen";
 
 /**
@@ -30,7 +30,7 @@ const Prove: React.FC = () => {
       // ここでZKproof生成ロジックのAPIを呼びだす。
 
       // 成功したら次のステップに進む
-      Router.push("/wait-for-proof");
+      Router.push("/nfts");
     } catch (error) {
       console.error("Error during prove process:", error);
     } finally {
@@ -51,8 +51,10 @@ const Prove: React.FC = () => {
         <Panel>
           <div className="flex items-center justify-between mb-6">
             <div className="flex items-center">
-              <h1 className="text-lg font-bold mr-2">My Portal</h1>
-              <span className="text-sm text-gray-300">
+              <h1 className="text-lg font-bold mr-2 text-gray-800">
+                My Portal
+              </h1>
+              <span className="text-sm text-gray-800">
                 EVM Address Registration
               </span>
             </div>
@@ -77,10 +79,10 @@ const Prove: React.FC = () => {
           </div>
 
           <div className="mb-8">
-            <h2 className="text-2xl font-bold mb-4 text-blue-100">
+            <h2 className="text-2xl font-bold mb-4 text-gray-800">
               Step 2. Register the EVM address
             </h2>
-            <p className="mb-6 text-gray-200">
+            <p className="mb-6 text-gray-800">
               Please add a wallet to connect with your account.
             </p>
           </div>
@@ -90,7 +92,6 @@ const Prove: React.FC = () => {
               <button className="w-64 bg-gradient-to-r from-blue-600 to-indigo-600 text-white py-3 px-6 rounded-md mb-5 shadow-lg shadow-blue-900/30 hover:brightness-110 transition-all">
                 Connect wallet
               </button>
-              <p className="text-blue-200">Or type your address</p>
             </div>
 
             <div className="w-full mb-6 max-w-lg mx-auto">
@@ -111,7 +112,7 @@ const Prove: React.FC = () => {
           </Card>
 
           <Card>
-            <h3 className="text-xl font-bold mb-4 text-blue-100">
+            <h3 className="text-xl font-bold mb-4 text-gray-800">
               How to register EVM address
             </h3>
             <ol className="space-y-5">
@@ -119,7 +120,7 @@ const Prove: React.FC = () => {
                 <span className="mr-3 flex-shrink-0 w-6 h-6 rounded-full bg-blue-900/50 border border-blue-400/30 flex items-center justify-center text-blue-300">
                   1
                 </span>
-                <div className="text-gray-200">
+                <div className="text-gray-800">
                   Connect your wallet using the button above
                 </div>
               </li>
@@ -127,7 +128,7 @@ const Prove: React.FC = () => {
                 <span className="mr-3 flex-shrink-0 w-6 h-6 rounded-full bg-blue-900/50 border border-blue-400/30 flex items-center justify-center text-blue-300">
                   2
                 </span>
-                <div className="text-gray-200">
+                <div className="text-gray-800">
                   Or manually enter your EVM address starting with 0x
                 </div>
               </li>
@@ -135,7 +136,7 @@ const Prove: React.FC = () => {
                 <span className="mr-3 flex-shrink-0 w-6 h-6 rounded-full bg-blue-900/50 border border-blue-400/30 flex items-center justify-center text-blue-300">
                   3
                 </span>
-                <div className="text-gray-200">
+                <div className="text-gray-800">
                   Click the prove button and sign the message in your wallet
                 </div>
               </li>

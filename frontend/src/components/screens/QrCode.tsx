@@ -1,9 +1,9 @@
 import Router from "next/router";
 import React, { useEffect, useState } from "react";
-import { Screen } from "../ui/Screen";
-import { Panel } from "../ui/Panel";
-import { Card } from "../ui/Card";
 import { Button } from "../ui/Button";
+import { Card } from "../ui/Card";
+import { Panel } from "../ui/Panel";
+import { Screen } from "../ui/Screen";
 
 /**
  * QrCodeScreen component with authentication effect
@@ -79,10 +79,10 @@ const QrCodeScreen: React.FC = () => {
       <Panel>
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center">
-            <h1 className="text-lg font-bold mr-2">My Portal</h1>
-            <span className="text-sm text-gray-300">
-              QR Code Authentication
-            </span>
+            <h1 className="text-lg font-bold mr-2  text-gray-800">
+              マイナポータル
+            </h1>
+            <span className="text-sm text-gray-800">QRコード認証</span>
           </div>
           <div>
             <button className="p-2 hover:bg-white/10 rounded-full transition-colors">
@@ -105,12 +105,11 @@ const QrCodeScreen: React.FC = () => {
         </div>
 
         <div className="mb-8">
-          <h2 className="text-2xl font-bold mb-4 text-blue-100">
-            Scan QR code with My Portal App
+          <h2 className="text-2xl font-bold mb-4 text-gray-800">
+            マイナポータル認証するためにQRコードをスキャンしてください
           </h2>
-          <p className="mb-6 text-gray-200">
-            Complete your identity verification by scanning this QR code with
-            the My Portal App on your smartphone.
+          <p className="mb-6  text-gray-800">
+            QRコードをスキャンすることで、マイナポータルアプリを使用して認証を行うことができます。
           </p>
         </div>
 
@@ -142,36 +141,11 @@ const QrCodeScreen: React.FC = () => {
                 className="w-64 h-64 border border-white/20 bg-white/5 rounded-md overflow-hidden cursor-pointer"
                 onClick={handleSimulateScan}
               >
-                <svg viewBox="0 0 100 100" className="w-full h-full">
-                  <path
-                    d="M0,0 h40 v40 h-40 z M60,0 h40 v40 h-40 z M0,60 h40 v40 h-40 z"
-                    fill="#1e3a8a"
-                    stroke="#93c5fd"
-                    strokeWidth="4"
-                  />
-                  <rect
-                    x="65"
-                    y="65"
-                    width="30"
-                    height="30"
-                    fill="#1e3a8a"
-                    stroke="#93c5fd"
-                    strokeWidth="4"
-                  />
-                  <path
-                    d="M5,5 h30 v30 h-30 z M65,5 h30 v30 h-30 z M5,65 h30 v30 h-30 z"
-                    fill="#3b82f6"
-                  />
-                  <path
-                    d="M15,15 h10 v10 h-10 z M75,15 h10 v10 h-10 z M15,75 h10 v10 h-10 z"
-                    fill="#1e3a8a"
-                  />
-                  <path
-                    d="M40,10 h10 M10,50 h10 M50,70 h10 M70,50 h10"
-                    stroke="#93c5fd"
-                    strokeWidth="4"
-                  />
-                </svg>
+                <img
+                  src="/sampleQRCode.png"
+                  alt="QR code"
+                  className="w-full h-full"
+                />
               </div>
             ) : (
               <div className="w-64 h-64 border border-white/20 bg-white/5 rounded-md overflow-hidden flex flex-col items-center justify-center">
@@ -181,7 +155,7 @@ const QrCodeScreen: React.FC = () => {
                       <div className="absolute inset-0 border-4 border-blue-300 opacity-25 rounded-full"></div>
                       <div className="absolute inset-0 border-4 border-t-blue-500 rounded-full animate-spin"></div>
                     </div>
-                    <p className="text-blue-200 font-medium">Scanning...</p>
+                    <p className=" text-gray-800 font-medium">スキャン中...</p>
                   </div>
                 )}
 
@@ -189,7 +163,7 @@ const QrCodeScreen: React.FC = () => {
                   <div className="text-center w-full px-6">
                     <div className="flex items-center justify-center space-x-4 mb-4">
                       <svg
-                        className="w-8 h-8 text-blue-300"
+                        className="w-8 h-8  text-gray-800"
                         viewBox="0 0 24 24"
                         fill="none"
                         stroke="currentColor"
@@ -245,7 +219,7 @@ const QrCodeScreen: React.FC = () => {
                         />
                       </svg>
                     </div>
-                    <p className="text-blue-200 font-medium mb-2">
+                    <p className=" text-gray-800 font-medium mb-2">
                       マイナンバーカード認証中...
                     </p>
                     <div className="w-full bg-blue-900/50 rounded-full h-2 mb-1">
@@ -254,7 +228,7 @@ const QrCodeScreen: React.FC = () => {
                         style={{ width: `${progress}%` }}
                       ></div>
                     </div>
-                    <p className="text-xs text-blue-300">{progress}%</p>
+                    <p className="text-xs  text-gray-800">{progress}%</p>
                   </div>
                 )}
 
@@ -276,17 +250,11 @@ const QrCodeScreen: React.FC = () => {
                       </svg>
                     </div>
                     <p className="text-green-300 font-medium">認証成功!</p>
-                    <p className="text-sm text-blue-200 mt-2">
+                    <p className="text-sm  text-gray-800 mt-2">
                       遷移しています...
                     </p>
                   </div>
                 )}
-              </div>
-            )}
-
-            {scanState === "idle" && (
-              <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 text-xs text-blue-300 bg-blue-900/50 px-3 py-1 rounded-full">
-                クリックしてスキャンをシミュレート
               </div>
             )}
           </div>
@@ -294,7 +262,7 @@ const QrCodeScreen: React.FC = () => {
           <div className="flex justify-center mb-8">
             <button
               onClick={handleRefreshQr}
-              className={`px-6 py-2 rounded-full border border-blue-400/50 text-blue-300 hover:bg-blue-900/20 hover:border-blue-400 transition-all ${
+              className={`px-6 py-2 rounded-full border border-blue-400/50  text-gray-800 hover:bg-blue-900/20 hover:border-blue-400 transition-all ${
                 scanState !== "idle" ? "opacity-50 cursor-not-allowed" : ""
               }`}
               disabled={scanState !== "idle"}
@@ -305,7 +273,7 @@ const QrCodeScreen: React.FC = () => {
         </Card>
 
         <Card>
-          <h3 className="text-xl font-bold mb-4 text-blue-100">
+          <h3 className="text-xl font-bold mb-4 text-gray-800">
             How to scan the QR code
           </h3>
           <ol className="space-y-5">
@@ -313,13 +281,13 @@ const QrCodeScreen: React.FC = () => {
               <span className="mr-3 flex-shrink-0 w-6 h-6 rounded-full bg-blue-900/50 border border-blue-400/30 flex items-center justify-center text-blue-300">
                 1
               </span>
-              <div className="text-gray-200">Download the My Portal App</div>
+              <div className="text-gray-800">Download the My Portal App</div>
             </li>
             <li className="flex items-start">
               <span className="mr-3 flex-shrink-0 w-6 h-6 rounded-full bg-blue-900/50 border border-blue-400/30 flex items-center justify-center text-blue-300">
                 2
               </span>
-              <div className="text-gray-200">
+              <div className="text-gray-800">
                 Open the app and tap "Scan" at the bottom of the screen
               </div>
             </li>
@@ -328,60 +296,7 @@ const QrCodeScreen: React.FC = () => {
                 3
               </span>
               <div className="flex flex-col">
-                <div className="text-gray-200 mb-2">Scan the QR code</div>
-                <div className="bg-white/5 p-3 border border-white/20 rounded-md shadow-sm">
-                  <div className="text-xs text-gray-400 mb-2">
-                    Please agree to the privacy policy
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <div className="w-8 h-8 flex items-center justify-center text-gray-300">
-                      <svg
-                        viewBox="0 0 24 24"
-                        className="w-6 h-6"
-                        fill="none"
-                        stroke="currentColor"
-                      >
-                        <path
-                          d="M3 12h18M3 6h18M3 18h18"
-                          strokeWidth="2"
-                          strokeLinecap="round"
-                        />
-                      </svg>
-                    </div>
-                    <div className="w-12 h-12 rounded-full bg-gradient-to-r from-blue-600 to-indigo-600 flex items-center justify-center shadow-lg shadow-blue-900/30">
-                      <svg
-                        viewBox="0 0 24 24"
-                        className="w-8 h-8 text-white"
-                        fill="none"
-                        stroke="currentColor"
-                      >
-                        <rect
-                          x="3"
-                          y="3"
-                          width="18"
-                          height="18"
-                          rx="2"
-                          strokeWidth="2"
-                        />
-                        <path d="M8 8h8v8h-8z" strokeWidth="2" />
-                      </svg>
-                    </div>
-                    <div className="w-8 h-8 flex items-center justify-center text-gray-300">
-                      <svg
-                        viewBox="0 0 24 24"
-                        className="w-6 h-6"
-                        fill="none"
-                        stroke="currentColor"
-                      >
-                        <path
-                          d="M4 6h16M4 12h16M4 18h16"
-                          strokeWidth="2"
-                          strokeLinecap="round"
-                        />
-                      </svg>
-                    </div>
-                  </div>
-                </div>
+                <div className="text-gray-800 mb-2">Scan the QR code</div>
               </div>
             </li>
           </ol>

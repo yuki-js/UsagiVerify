@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 
 type Props = {
   children: React.ReactNode[]; // Array of React nodes
@@ -6,6 +6,9 @@ type Props = {
   interval?: number;
 };
 
+/**
+ * Carousel component
+ */
 export const Carousel = ({
   children,
   autoPlay = false,

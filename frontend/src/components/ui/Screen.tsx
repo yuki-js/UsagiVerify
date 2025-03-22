@@ -2,6 +2,9 @@ type Props = {
   children: React.ReactNode;
 };
 
+/**
+ * Screen component
+ */
 export const Screen = ({ children }: Props) => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-900 to-blue-900 text-white p-4">
