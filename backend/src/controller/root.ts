@@ -18,6 +18,11 @@ const request = Type.Object({
 
 export const root = new Hono()
   .post("/issue-at", tbValidator("json", request), async (c) => {
+    /**
+     * アクセストークン発行
+     * アドレスをもとにアクセストークンを発行する
+     * 後のリクエストでこのアクセストークンを使う
+     */
     const { address } = c.req.valid("json");
 
     const client = hc<typeof honoApp>(config.manpokoUrl);
@@ -42,6 +47,11 @@ export const root = new Hono()
     "/get-info",
     tbValidator("json", Type.Object({ accessToken: Type.String() })),
     async (c) => {
+      /**
+       * アクセストークンをもとに情報を取得する
+       * データを取得するだけで、ZKPは実行しない。
+       * ZKPをする前の対象データ確認のために用いる
+       */
       const { accessToken } = c.req.valid("json");
 
       const client = hc<typeof honoApp>(config.manpokoUrl);
@@ -73,6 +83,9 @@ export const root = new Hono()
     "/prove",
     tbValidator("json", Type.Object({ accessToken: Type.String() })),
     async (c) => {
+      /**
+       * アクセストークンをもとに情報を取得し、それをもとにZKPを実行してNFTを発行する
+       */
       // client mac validation phase
       const { accessToken } = c.req.valid("json");
       const reqMacKey = deriveRequestMacKey(
