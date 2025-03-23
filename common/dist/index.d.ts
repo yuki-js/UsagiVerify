@@ -9,4 +9,5 @@ export declare function encodePayload(payload: Array<{
 export declare function calculateSha256(input: Buffer): Buffer;
 export declare function calculateMac(derivedKey: Buffer, payload: Buffer): Buffer;
 export declare function deriveResponseMacKey(masterSecret: Buffer): Buffer;
+export declare function deriveRequestMacKey(masterSecret: Buffer): Buffer;
 //# sourceMappingURL=index.d.ts.map

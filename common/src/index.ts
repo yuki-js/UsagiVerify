@@ -100,3 +100,10 @@ export function deriveResponseMacKey(masterSecret: Buffer): Buffer {
     Buffer.concat([masterSecret, Buffer.from("response", "utf-8")])
   );
 }
+
+export function deriveRequestMacKey(masterSecret: Buffer): Buffer {
+  // sha256(masterSecret + "request")
+  return calculateSha256(
+    Buffer.concat([masterSecret, Buffer.from("request", "utf-8")])
+  );
+}

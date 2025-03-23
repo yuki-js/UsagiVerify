@@ -8,10 +8,12 @@ import {
   calculateMac,
   calculateSha256,
   deriveResponseMacKey,
+  deriveRequestMacKey,
 } from "@usagiverify/common";
 
 const reqSchema = Type.Object({
   accessToken: Type.String(),
+  mac: Type.Optional(Type.String()),
 });
 
 export const selfinfo = new Hono().post(
@@ -21,6 +23,20 @@ export const selfinfo = new Hono().post(
     const accessToken = c.req.valid("json").accessToken;
     if (!accessToken) {
       return c.text("Unauthorized", 401);
+    }
+    const reqMac = c.req.valid("json").mac;
+    if (reqMac) {
+      const reqMacKey = deriveRequestMacKey(
+        Buffer.from(config.masterSecret, "utf-8")
+      );
+
+      const expReqMac = calculateMac(
+        reqMacKey,
+        Buffer.from(accessToken, "utf-8")
+      );
+      if (reqMac !== expReqMac.toString("hex")) {
+        return c.text("Unauthorized", 401);
+      }
     }
     const sub = extractSubFromAccessToken(accessToken);
     if (!sub) {

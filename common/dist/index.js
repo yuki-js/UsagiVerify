@@ -83,4 +83,8 @@ export function deriveResponseMacKey(masterSecret) {
     // sha256(masterSecret + "response")
     return calculateSha256(Buffer.concat([masterSecret, Buffer.from("response", "utf-8")]));
 }
+export function deriveRequestMacKey(masterSecret) {
+    // sha256(masterSecret + "request")
+    return calculateSha256(Buffer.concat([masterSecret, Buffer.from("request", "utf-8")]));
+}
 //# sourceMappingURL=index.js.map

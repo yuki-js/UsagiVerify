@@ -9,6 +9,7 @@ import {
   calculateMac,
   decodePayload,
   calculateSha256,
+  deriveRequestMacKey,
 } from "@usagiverify/common";
 
 const request = Type.Object({
@@ -65,6 +66,48 @@ export const root = new Hono()
         hashValid:
           sha256Payload ===
           calculateSha256(Buffer.from(payload, "hex")).toString("hex"),
+      });
+    }
+  )
+  .post(
+    "/prove",
+    tbValidator("json", Type.Object({ accessToken: Type.String() })),
+    async (c) => {
+      // client mac validation phase
+      const { accessToken } = c.req.valid("json");
+      const reqMacKey = deriveRequestMacKey(
+        Buffer.from(config.masterSecret, "utf-8")
+      );
+
+      const reqMac = calculateMac(reqMacKey, Buffer.from(accessToken, "utf-8"));
+
+      const client = hc<typeof honoApp>(config.manpokoUrl);
+      const response = await client.selfinfo.$post({
+        json: {
+          accessToken,
+          mac: reqMac.toString("hex"),
+        },
+      });
+      if (response.status !== 200) {
+        return c.text("Failed to get info", 500);
+      }
+      const { payload, mac, sha256Payload } = await response.json();
+
+      const reproducedMac = calculateMac(
+        deriveResponseMacKey(Buffer.from(config.masterSecret, "utf-8")),
+        Buffer.from(payload, "hex")
+      );
+
+      if (
+        mac !== reproducedMac.toString("hex") ||
+        sha256Payload !==
+          calculateSha256(Buffer.from(payload, "hex")).toString("hex")
+      ) {
+        return c.text("Unauthorized", 401);
+      }
+
+      return c.json({
+        ok: true,
       });
     }
   );
