@@ -1,0 +1,36 @@
+{
+  "name": "@usagiverify/common",
+  "version": "1.0.0",
+  "private": true,
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "scripts": {
+    "clean": "rm -rf ./dist",
+    "build": "npm run clean && tsc",
+    "dev": "tsc --watch"
+  },
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "package.json"
+  ],
+  "type": "module",
+  "module": "dist/index.js",
+  "dependencies": {
+    "@hono/node-server": "^1.13.7",
+    "@hono/typebox-validator": "^0.3.2",
+    "@kintaman-co/nfigure": "^0.1.5",
+    "@kintaman-co/nfigure-typebox": "^0.1.6",
+    "@sinclair/typebox": "^0.34.30",
+    "hono": "^4.6.14",
+    "@usagiverify/manpoko": "*"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.2",
+    "esbuild": "^0.25.1",
+    "nodemon": "^3.1.9",
+    "typescript": "^5.8.2"
+  }
+}

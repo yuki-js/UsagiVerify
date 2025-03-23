@@ -1,12 +1,19 @@
 import { Hono } from "hono";
-import crypto from "node:crypto";
 import config from "../config";
 
 import { tbValidator } from "@hono/typebox-validator";
 import { Type } from "@sinclair/typebox";
+import {
+  encodePayload,
+  calculateMac,
+  calculateSha256,
+  deriveResponseMacKey,
+  deriveRequestMacKey,
+} from "@usagiverify/common";
 
 const reqSchema = Type.Object({
   accessToken: Type.String(),
+  mac: Type.Optional(Type.String()),
 });
 
 export const selfinfo = new Hono().post(
@@ -16,6 +23,20 @@ export const selfinfo = new Hono().post(
     const accessToken = c.req.valid("json").accessToken;
     if (!accessToken) {
       return c.text("Unauthorized", 401);
+    }
+    const reqMac = c.req.valid("json").mac;
+    if (reqMac) {
+      const reqMacKey = deriveRequestMacKey(
+        Buffer.from(config.masterSecret, "utf-8")
+      );
+
+      const expReqMac = calculateMac(
+        reqMacKey,
+        Buffer.from(accessToken, "utf-8")
+      );
+      if (reqMac !== expReqMac.toString("hex")) {
+        return c.text("Unauthorized", 401);
+      }
     }
     const sub = extractSubFromAccessToken(accessToken);
     if (!sub) {
@@ -48,77 +69,4 @@ function extractSubFromAccessToken(accessToken: string): string | undefined {
   const jsonAccessToken = Buffer.from(accessToken, "base64").toString("utf-8");
   const parsedAccessToken = JSON.parse(jsonAccessToken);
   return parsedAccessToken.sub;
-}
-
-function encodePayload(payload: Array<{ key: string; value: string }>) {
-  // precondition check
-  if (!Array.isArray(payload)) {
-    throw new Error("Invalid payload");
-  }
-  if (payload.length === 0) {
-    throw new Error("Payload is empty");
-  }
-  for (const { key, value } of payload) {
-    if (typeof key !== "string" || typeof value !== "string") {
-      throw new Error("Invalid payload");
-    }
-    const keyBuffer = Buffer.from(key, "utf-8");
-    const valueBuffer = Buffer.from(value, "utf-8");
-    if (keyBuffer.length > 8 || keyBuffer.length === 0) {
-      throw new Error("Invalid payload");
-    }
-    if (valueBuffer.length > 8 || valueBuffer.length === 0) {
-      throw new Error("Invalid payload");
-    }
-    if (keyBuffer.toString("utf-8") !== key) {
-      throw new Error("Invalid payload");
-    }
-    if (valueBuffer.toString("utf-8") !== value) {
-      throw new Error("Invalid payload");
-    }
-  }
-
-  // encoding
-  const encodedPayloadRow = payload.map(({ key, value }) => {
-    const keyBufferFragment = Buffer.from(key, "utf-8");
-    const valueBufferFragment = Buffer.from(value, "utf-8");
-
-    const keyBuffer = Buffer.alloc(8);
-    const valueBuffer = Buffer.alloc(56);
-
-    keyBufferFragment.copy(keyBuffer);
-    valueBufferFragment.copy(valueBuffer);
-
-    const rowBuffer = Buffer.concat([keyBuffer, valueBuffer]);
-    return rowBuffer;
-  });
-
-  const encodedPayload = Buffer.concat(encodedPayloadRow);
-
-  // postcondition check
-  // check length that aligns to 64 bytes
-  if (encodedPayload.length % 64 !== 0) {
-    throw new Error("Invalid payload");
-  }
-
-  return encodedPayload;
-}
-
-function calculateSha256(input: Buffer): Buffer {
-  // sha256(payload)
-  const hash = crypto.createHash("sha256");
-  hash.update(input);
-  const digest = hash.digest();
-  return digest;
-}
-function calculateMac(derivedKey: Buffer, payload: Buffer): Buffer {
-  // sha256(key + sha256(payload))
-  return calculateSha256(Buffer.concat([derivedKey, calculateSha256(payload)]));
-}
-
-function deriveResponseMacKey(masterSecret: Buffer): Buffer {
-  // sha256(masterSecret + "response")
-  return calculateSha256(
-    Buffer.concat([masterSecret, Buffer.from("response", "utf-8")])
-  );
 }

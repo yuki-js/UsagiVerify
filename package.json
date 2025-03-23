@@ -3,13 +3,14 @@
   "version": "1.0.0",
   "private": true,
   "workspaces": [
+    "common",
     "manpoko",
     "backend",
     "frontend",
     "contract"
   ],
   "scripts": {
-    "build": "npm run -w manpoko build && npm run -w backend build && npm run -w frontend build && npm run -w contract build"
+    "build": "npm run -w common build && npm run -w manpoko build && npm run -w backend build && npm run -w frontend build && npm run -w contract build"
   },
   "keywords": [],
   "author": "",
