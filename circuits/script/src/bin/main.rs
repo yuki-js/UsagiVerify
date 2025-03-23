@@ -10,10 +10,14 @@
 //! RUST_LOG=info cargo run --release -- --prove
 //! ```
 
-use alloy_sol_types::SolType;
 use clap::Parser;
-use fibonacci_lib::PublicValuesStruct;
+use fibonacci_lib::{IoHashState, Param, Sprm};
 use sp1_sdk::{include_elf, ProverClient, SP1Stdin};
+use streamsha::{
+    hash_state::HashState,
+    traits::{Resumable, StreamHasher},
+    Sha256,
+};
 
 /// The ELF (executable and linkable format) file for the Succinct RISC-V zkVM.
 pub const FIBONACCI_ELF: &[u8] = include_elf!("fibonacci-program");
@@ -29,19 +33,7 @@ struct Args {
     prove: bool,
 
     #[clap(long)]
-    master_secret: String,
-
-    #[clap(long)]
-    req_payload: String,
-
-    #[clap(long)]
-    req_payload_mac: String,
-
-    #[clap(long)]
-    res_payload: String,
-
-    #[clap(long)]
-    res_payload_mac: String,
+    param: String,
 }
 
 fn main() {
@@ -57,6 +49,9 @@ fn main() {
         std::process::exit(1);
     }
 
+    // decode params
+    let param: Param = serde_json::from_str(&args.param).unwrap();
+
     // Setup the prover client.
     let client = ProverClient::from_env();
 
@@ -64,11 +59,11 @@ fn main() {
     let mut stdin = SP1Stdin::new();
 
     // Read the inputs from the command line arguments as hex strings.
-    let master_secret = hex::decode(&args.master_secret).unwrap_or("foobar".as_bytes().to_vec());
-    let req_payload = hex::decode(&args.req_payload).unwrap_or("eyJzdWIiOiJmb28iLCJraWQiOiJhY2Nlc3NfdG9rZW4iLCJpc3MiOiJtYW5wb2tvIn0=".as_bytes().to_vec());
-    let req_payload_mac = hex::decode(&args.req_payload_mac).unwrap_or(hex::decode("0a5f3bbd1050f14fed857dce085a43ebdbae4544cc08868627f11cfd49f766b1").unwrap());
-    let res_payload = hex::decode(&args.res_payload).unwrap_or(hex::decode("73756200000000000000000000000000666f6f00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000076616c3230323200000000000000000035303030300000000000000000000000000000000000000000000000000000000000000000000000000000000000000076616c3230323300000000000000000031303030303000000000000000000000000000000000000000000000000000000000000000000000000000000000000076616c32303234000000000000000000323030303030000000000000000000000000000000000000000000000000000000000000000000000000000000000000").unwrap());
-    let res_payload_mac = hex::decode(&args.res_payload_mac).unwrap_or(hex::decode("0bdf682acd89b5ae8837592f091257cd8a2cb8d3ac1c12108c064e699f2ff5c4").unwrap());
+    let master_secret = hex::decode(&param.master_secret).unwrap();
+    let req_payload = hex::decode(&param.req_payload).unwrap();
+    let req_payload_mac = hex::decode(&param.req_payload_mac).unwrap();
+    let res_payload = hex::decode(&param.res_payload).unwrap();
+    let res_payload_mac = hex::decode(&param.res_payload_mac).unwrap();
 
     let mut h = Sha256::new();
     h.update(&res_payload[0..64 * 3]);
