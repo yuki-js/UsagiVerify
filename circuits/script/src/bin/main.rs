@@ -12,7 +12,7 @@
 
 use clap::Parser;
 use streamsha::{hash_state::HashState, traits::{Resumable, StreamHasher}, Sha256};
-use usagiverify_lib::IoHashState;
+use usagiverify_lib::{IoHashState, Sprm};
 use sp1_sdk::{include_elf, ProverClient, SP1Stdin};
 
 /// The ELF (executable and linkable format) file for the Succinct RISC-V zkVM.
@@ -28,8 +28,20 @@ struct Args {
     #[clap(long)]
     prove: bool,
 
-    #[clap(long, default_value = "20")]
-    n: u32,
+    #[clap(long)]
+    master_secret: String,
+
+    #[clap(long)]
+    req_payload: String,
+
+    #[clap(long)]
+    req_payload_mac: String,
+
+    #[clap(long)]
+    res_payload: String,
+
+    #[clap(long)]
+    res_payload_mac: String,
 }
 
 fn main() {
@@ -51,35 +63,36 @@ fn main() {
     // Setup the inputs.
     let mut stdin = SP1Stdin::new();
 
-    let message = b"Lorem ipsum dolor sit amet, consectetur adipiscing elit. \
-        Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. \
-        Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. \
-        Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. \
-        Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.";
-
-    let (hiding, public) = &message.split_at(55);
+    // Read the inputs from the command line arguments as hex strings.
+    let master_secret = hex::decode(&args.master_secret).unwrap_or("foobar".as_bytes().to_vec());
+    let req_payload = hex::decode(&args.req_payload).unwrap_or("eyJzdWIiOiJmb28iLCJraWQiOiJhY2Nlc3NfdG9rZW4iLCJpc3MiOiJtYW5wb2tvIn0=".as_bytes().to_vec());
+    let req_payload_mac = hex::decode(&args.req_payload_mac).unwrap_or(hex::decode("0a5f3bbd1050f14fed857dce085a43ebdbae4544cc08868627f11cfd49f766b1").unwrap());
+    let res_payload = hex::decode(&args.res_payload).unwrap_or(hex::decode("73756200000000000000000000000000666f6f00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000076616c3230323200000000000000000035303030300000000000000000000000000000000000000000000000000000000000000000000000000000000000000076616c3230323300000000000000000031303030303000000000000000000000000000000000000000000000000000000000000000000000000000000000000076616c32303234000000000000000000323030303030000000000000000000000000000000000000000000000000000000000000000000000000000000000000").unwrap());
+    let res_payload_mac = hex::decode(&args.res_payload_mac).unwrap_or(hex::decode("0bdf682acd89b5ae8837592f091257cd8a2cb8d3ac1c12108c064e699f2ff5c4").unwrap());
 
     let mut h = Sha256::new();
-    h.update(hiding);
-    let hash_state = h.pause();
-    let ex_hash_state = match hash_state {
-        HashState::Sha256(hash_state) => hash_state,
-        _ => panic!("Invalid hash state"),
+    h.update(&res_payload[0..64 * 3]);
+    let hs = match h.pause() {
+        HashState::Sha256(hs) => hs,
+        _ => panic!("Hash type does not match"),
     };
 
-    let mut full_hash = Sha256::new();
-    full_hash.update(message);
-    let digest = full_hash.finish();
-
-    let iohs = IoHashState {
-        h: ex_hash_state.h,
-        message_len: ex_hash_state.message_len,
-        block_len: ex_hash_state.block_len,
-        current_block: ex_hash_state.current_block.to_vec(),
+    let res_payload_sprm = Sprm {
+        hs: IoHashState {
+            h: hs.h,
+            message_len: hs.message_len,
+            block_len: hs.block_len,
+            current_block: hs.current_block.to_vec(),
+        },
+        remaining: res_payload[64 * 3..].to_vec(),
     };
-    stdin.write(&iohs);
-    stdin.write(public);
-    stdin.write(&digest.to_vec());
+
+    // Write the inputs to stdin.
+    stdin.write(&master_secret);
+    stdin.write(&req_payload);
+    stdin.write(&req_payload_mac);
+    stdin.write(&res_payload_sprm);
+    stdin.write(&res_payload_mac);
 
     if args.execute {
         // Execute the program

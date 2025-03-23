@@ -111,7 +111,8 @@ export const root = new Hono()
         return c.text("Failed to get info", 500);
       }
       const { payload, mac, sha256Payload } = await response.json();
-
+      console.log("payload", payload);
+      console.log("mac", mac);
       const reproducedMac = calculateMac(
         deriveResponseMacKey(Buffer.from(config.masterSecret, "utf-8")),
         Buffer.from(payload, "hex")

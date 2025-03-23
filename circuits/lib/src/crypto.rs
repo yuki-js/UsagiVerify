@@ -18,6 +18,14 @@ pub fn calculate_mac(
     // sha256(key + sha256(payload))
     calculate_sha256(&[derived_key, &calculate_sha256(payload)].concat())
 }
+
+pub fn calculate_mac_hash(
+    derived_key: &[u8],
+    payload_hash: &[u8],
+) -> Vec<u8> {
+    // sha256(key + sha256(payload))
+    calculate_sha256(&[derived_key, payload_hash].concat())
+}
 pub fn derive_response_mac_key(
     master_secret: &[u8],
 ) -> Vec<u8> {
