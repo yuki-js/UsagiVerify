@@ -27,7 +27,7 @@
     "@kintaman-co/nfigure-typebox": "^0.1.6",
     "@sinclair/typebox": "^0.34.30",
     "hono": "^4.6.14",
-    "viem": "^2.23.14"
+    "viem": "^2.23.14",
     "@usagiverify/manpoko": "*"
   },
   "devDependencies": {
