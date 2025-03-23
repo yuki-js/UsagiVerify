@@ -124,23 +124,19 @@ export async function mintToken(
   amount: bigint,
   uri: string
 ) {
-  try {
-    const txHash = await walletClient.writeContract({
-      address: ERC1155WithLock_ADDRESS,
-      abi: ERC1155WithLock_ABI,
-      functionName: "mint",
-      args: [to, tokenId, amount, uri],
-    });
+  const txHash = await walletClient.writeContract({
+    address: ERC1155WithLock_ADDRESS,
+    abi: ERC1155WithLock_ABI,
+    functionName: "mint",
+    args: [to, tokenId, amount, uri],
+  });
 
-    // wait for tx to be mined
-    const receipt = await publicClient.waitForTransactionReceipt({
-      hash: txHash as `0x${string}`,
-    });
+  // wait for tx to be mined
+  const receipt = await publicClient.waitForTransactionReceipt({
+    hash: txHash as `0x${string}`,
+  });
 
-    console.log("mintToken tx receipt:", receipt);
-  } catch (error) {
-    console.log("error occured when mint:", error);
-  }
+  console.log("mintToken tx receipt:", receipt);
 }
 
 /**

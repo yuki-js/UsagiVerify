@@ -10,8 +10,10 @@ import {
   decodePayload,
   calculateSha256,
   deriveRequestMacKey,
+  extractSubFromAccessToken,
 } from "@usagiverify/common";
 import { exec } from "child_process";
+import { mintToken } from "../lib/viem";
 
 const request = Type.Object({
   address: Type.String(),
@@ -95,6 +97,11 @@ export const root = new Hono()
        */
       // client mac validation phase
       const { accessToken } = c.req.valid("json");
+      const sub = extractSubFromAccessToken(accessToken);
+      if (!sub) {
+        return c.text("Invalid access token", 400);
+      }
+
       const reqMacKey = deriveRequestMacKey(
         Buffer.from(config.masterSecret, "utf-8")
       );
@@ -161,6 +168,26 @@ export const root = new Hono()
       } else {
         console.log("skip prove");
       }
+
+      const decPl = decodePayload(Buffer.from(payload, "hex"));
+
+      const val2024 = parseInt(
+        decPl.find((item) => item.key === "val2024")!.value
+      );
+
+      try {
+        await mintToken(
+          sub,
+          BigInt(1), // 医療費: Medical expenses NFT
+          BigInt(val2024),
+          "ipfs://bafkreibqlgz36cado4gmjf5nfbrltkxuz5z2merrcd73caay7xhvtbapem"
+        );
+      } catch (error) {
+        console.error("mint error", error);
+
+        return c.text("Failed to mint", 500);
+      }
+      console.log("mint success");
 
       return c.json({
         ok: true,

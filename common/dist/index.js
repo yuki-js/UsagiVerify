@@ -87,4 +87,9 @@ export function deriveRequestMacKey(masterSecret) {
     // sha256(masterSecret + "request")
     return calculateSha256(Buffer.concat([masterSecret, Buffer.from("request", "utf-8")]));
 }
+export function extractSubFromAccessToken(accessToken) {
+    const jsonAccessToken = Buffer.from(accessToken, "base64").toString("utf-8");
+    const parsedAccessToken = JSON.parse(jsonAccessToken);
+    return parsedAccessToken.sub;
+}
 //# sourceMappingURL=index.js.map

@@ -107,3 +107,11 @@ export function deriveRequestMacKey(masterSecret: Buffer): Buffer {
     Buffer.concat([masterSecret, Buffer.from("request", "utf-8")])
   );
 }
+
+export function extractSubFromAccessToken(
+  accessToken: string
+): string | undefined {
+  const jsonAccessToken = Buffer.from(accessToken, "base64").toString("utf-8");
+  const parsedAccessToken = JSON.parse(jsonAccessToken);
+  return parsedAccessToken.sub;
+}
