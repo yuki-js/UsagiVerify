@@ -22,7 +22,7 @@ spec:
               valueFrom:
                 configMapKeyRef:
                   name: manpoko-config
-                  key: config.json
+                  key: manpoko-config.json
           ports:
             - containerPort: 5000
           livenessProbe:

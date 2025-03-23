@@ -22,7 +22,7 @@ spec:
               valueFrom:
                 configMapKeyRef:
                   name: backend-config
-                  key: config.json
+                  key: backend-config.json
           ports:
             - containerPort: 5000
           livenessProbe:
