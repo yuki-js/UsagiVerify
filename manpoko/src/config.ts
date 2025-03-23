@@ -5,6 +5,7 @@ import { Type } from "@sinclair/typebox";
 
 const schema = Type.Object({
   PORT: Type.Integer(),
+  masterSecret: Type.String(),
 });
 
 export default nfigure({

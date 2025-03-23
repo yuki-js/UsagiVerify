@@ -26,7 +26,8 @@
     "@kintaman-co/nfigure": "^0.1.5",
     "@kintaman-co/nfigure-typebox": "^0.1.6",
     "@sinclair/typebox": "^0.34.30",
-    "hono": "^4.6.14"
+    "hono": "^4.6.14",
+    "@usagiverify/manpoko": "*"
   },
   "devDependencies": {
     "@types/node": "^22.10.2",

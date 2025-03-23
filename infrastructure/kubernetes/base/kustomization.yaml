@@ -3,9 +3,13 @@ kind: Kustomization
 
 resources:
   - backend.yaml
+  - manpoko.yaml
   - ingress.yaml
 
 configMapGenerator:
   - name: backend-config
     files:
-      - config.json
+      - backend-config.json
+  - name: manpoko-config
+    files:
+      - manpoko-config.json

@@ -20,3 +20,13 @@ spec:
                 name: backend
                 port:
                   number: 80
+    - host: manpoko-usagiverify.ouchiserver.aokiapp.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: manpoko
+                port:
+                  number: 80
