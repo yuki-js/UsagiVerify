@@ -20,5 +20,3 @@ app
   .route("/", healthz);
 
 export default app;
-
-export type AppType = typeof app;
