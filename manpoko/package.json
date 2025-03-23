@@ -1,5 +1,5 @@
 {
-  "name": "@usagiverify/backend",
+  "name": "@usagiverify/manpoko",
   "version": "1.0.0",
   "private": true,
   "keywords": [],
@@ -26,9 +26,7 @@
     "@kintaman-co/nfigure": "^0.1.5",
     "@kintaman-co/nfigure-typebox": "^0.1.6",
     "@sinclair/typebox": "^0.34.30",
-    "hono": "^4.6.14",
-    "viem": "^2.23.14"
-    "@usagiverify/manpoko": "*"
+    "hono": "^4.6.14"
   },
   "devDependencies": {
     "@types/node": "^22.10.2",

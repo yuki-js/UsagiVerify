@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: manpoko
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: manpoko
+  template:
+    metadata:
+      labels:
+        app: manpoko
+    spec:
+      imagePullSecrets:
+        - name: github-registry-secret
+      containers:
+        - name: manpoko
+          image: ghcr.io/yuki-js/usagiverify/manpoko:latest
+          env:
+            - name: NFIGURE_JSON
+              valueFrom:
+                configMapKeyRef:
+                  name: manpoko-config
+                  key: config.json
+          ports:
+            - containerPort: 5000
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 5000
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: 5000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: manpoko
+spec:
+  selector:
+    app: manpoko
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 5000
+  type: ClusterIP
