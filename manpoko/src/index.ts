@@ -1,6 +1,8 @@
 import { serve } from "@hono/node-server";
 import app from "./controller";
 import config from "./config";
+import * as cryptoTools from "@usagiverify/common";
+export { cryptoTools };
 
 export const honoApp = app;
 
