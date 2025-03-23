@@ -59,7 +59,7 @@ export const Carousel = ({
   }, [autoPlay, interval]);
 
   return (
-    <div className="bg-black/80 w-full aspect-video relative flex items-center justify-center mb-10 rounded-lg border border-gray-700 overflow-hidden">
+    <div className="w-full aspect-video bg-white/60 p-5 rounded-lg border border-black/25 mb-8 relative flex items-center justify-center">
       <div className="absolute left-4 z-30">
         <button
           className="text-white p-2 rounded-full bg-gray-800/70 hover:bg-blue-600/70 transition-colors"

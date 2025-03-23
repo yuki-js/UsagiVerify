@@ -1,3 +1,5 @@
+import { honoApp } from "@usagiverify/backend";
+import { hc } from "hono/client";
 import Router from "next/router";
 import React, { useState } from "react";
 import { LoadingSpinner } from "../LoadingSpinner";
@@ -14,6 +16,9 @@ const Prove: React.FC = () => {
   const [address, setAddress] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
+  // create hono client
+  const client = hc<typeof honoApp>("http://localhost:5000");
+
   const handleAddressChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setAddress(e.target.value);
   };
@@ -27,7 +32,25 @@ const Prove: React.FC = () => {
     try {
       // Simulate API call or blockchain interaction
       await new Promise((resolve) => setTimeout(resolve, 2000));
+
+      // call get access token api
+      const response = await client["issue-at"].$post({
+        json: {
+          address: address,
+        },
+      });
+
+      // accessTokenを取得する。
+      const accessToken = (await response.json()).accessToken;
+
+      console.log("accessToken:", accessToken);
       // ここでZKproof生成ロジックのAPIを呼びだす。
+      const res = await client.prove.$post({
+        json: {
+          accessToken: accessToken,
+        },
+      });
+      console.log("Prove response:", await res.json());
 
       // 成功したら次のステップに進む
       Router.push("/nfts");
@@ -89,7 +112,15 @@ const Prove: React.FC = () => {
 
           <Card>
             <div className="flex flex-col items-center mb-6">
-              <button className="w-64 bg-gradient-to-r from-blue-600 to-indigo-600 text-white py-3 px-6 rounded-md mb-5 shadow-lg shadow-blue-900/30 hover:brightness-110 transition-all">
+              <button
+                onClick={async () => {
+                  setIsLoading(true);
+                  await new Promise((resolve) => setTimeout(resolve, 2000));
+                  setIsLoading(false);
+                  setAddress("0x51908F598A5e0d8F1A3bAbFa6DF76F9704daD072");
+                }}
+                className="w-64 bg-gradient-to-r from-blue-600 to-indigo-600 text-white py-3 px-6 rounded-md mb-5 shadow-lg shadow-blue-900/30 hover:brightness-110 transition-all"
+              >
                 Connect wallet
               </button>
             </div>

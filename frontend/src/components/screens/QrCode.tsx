@@ -15,9 +15,10 @@ const QrCodeScreen: React.FC = () => {
   >("idle");
   const [progress, setProgress] = useState(0);
 
-  const goToNextStep = () => {
+  const goToNextStep = async () => {
     Router.push("/addr-reg");
   };
+
   // Effect for auto transition after some seconds
   useEffect(() => {
     if (scanState === "idle") return;
