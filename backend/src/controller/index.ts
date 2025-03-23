@@ -3,10 +3,21 @@ import { cors } from "hono/cors";
 import { healthz } from "./healthz";
 import { root } from "./root";
 
-const app = new Hono().route("/", root).route("/", healthz);
+const app = new Hono();
 
 // CROS configuration
-app.use("*", cors());
+app
+  .use(
+    "*",
+    cors({
+      origin: "*",
+      allowMethods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+      allowHeaders: ["Content-Type", "Authorization"],
+      maxAge: 600,
+    })
+  )
+  .route("/", root)
+  .route("/", healthz);
 
 export default app;
 

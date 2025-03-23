@@ -1,5 +1,5 @@
-// import { honoApp } from "@usagiverify/backend";
-// import { hc } from "hono/client";
+import { honoApp } from "@usagiverify/backend";
+import { hc } from "hono/client";
 import Router from "next/router";
 import React, { useEffect, useState } from "react";
 import { Button } from "../ui/Button";
@@ -18,22 +18,13 @@ const QrCodeScreen: React.FC = () => {
   const [progress, setProgress] = useState(0);
 
   // create hono client
-  /*
-  const client = hc<typeof honoApp>(
-    "https://usagiverify.ouchiserver.aokiapp.com"
-  );
-  */
+  const client = hc<typeof honoApp>("http://localhost:5000");
 
   const goToNextStep = async () => {
     // call get access token api
-    /*
-    const response = await client["issue-at"].$post({
-      json: {
-        address: "0x1234567890",
-      },
-    });
+    /* */
+    const response = await client.healthz.$get();
     console.log(response);
-    */
 
     Router.push("/addr-reg");
   };
