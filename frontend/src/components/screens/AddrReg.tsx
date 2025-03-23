@@ -15,7 +15,8 @@ const Prove: React.FC = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const handleAddressChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setAddress(e.target.value);
+    // setAddress(e.target.value);
+    setAddress("0x51908F598A5e0d8F1A3bAbFa6DF76F9704daD072");
   };
 
   /**
@@ -89,7 +90,15 @@ const Prove: React.FC = () => {
 
           <Card>
             <div className="flex flex-col items-center mb-6">
-              <button className="w-64 bg-gradient-to-r from-blue-600 to-indigo-600 text-white py-3 px-6 rounded-md mb-5 shadow-lg shadow-blue-900/30 hover:brightness-110 transition-all">
+              <button
+                onClick={async () => {
+                  setIsLoading(true);
+                  await new Promise((resolve) => setTimeout(resolve, 2000));
+                  setIsLoading(false);
+                  setAddress("0x51908F598A5e0d8F1A3bAbFa6DF76F9704daD072");
+                }}
+                className="w-64 bg-gradient-to-r from-blue-600 to-indigo-600 text-white py-3 px-6 rounded-md mb-5 shadow-lg shadow-blue-900/30 hover:brightness-110 transition-all"
+              >
                 Connect wallet
               </button>
             </div>

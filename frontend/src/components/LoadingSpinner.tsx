@@ -15,7 +15,7 @@ export const LoadingSpinner = () => (
         {/* Inner pulsing circle */}
         <div className="absolute inset-0 m-3 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-full animate-pulse"></div>
       </div>
-      <p className="text-blue-100 font-medium">Verifying Address</p>
+      <p className="text-blue-100 font-medium">Please wait....</p>
       <p className="text-gray-300 text-sm mt-2">
         Please wait while we process your request
       </p>

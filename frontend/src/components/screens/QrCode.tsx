@@ -1,3 +1,5 @@
+// import { honoApp } from "@usagiverify/backend";
+// import { hc } from "hono/client";
 import Router from "next/router";
 import React, { useEffect, useState } from "react";
 import { Button } from "../ui/Button";
@@ -15,9 +17,27 @@ const QrCodeScreen: React.FC = () => {
   >("idle");
   const [progress, setProgress] = useState(0);
 
-  const goToNextStep = () => {
+  // create hono client
+  /*
+  const client = hc<typeof honoApp>(
+    "https://usagiverify.ouchiserver.aokiapp.com"
+  );
+  */
+
+  const goToNextStep = async () => {
+    // call get access token api
+    /*
+    const response = await client["issue-at"].$post({
+      json: {
+        address: "0x1234567890",
+      },
+    });
+    console.log(response);
+    */
+
     Router.push("/addr-reg");
   };
+
   // Effect for auto transition after some seconds
   useEffect(() => {
     if (scanState === "idle") return;
