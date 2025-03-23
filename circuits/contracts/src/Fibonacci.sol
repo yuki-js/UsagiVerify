@@ -35,10 +35,9 @@ contract Fibonacci {
     function verifyFibonacciProof(bytes calldata _publicValues, bytes calldata _proofBytes)
         public
         view
-        returns (uint32, uint32, uint32)
+        returns (bool)
     {
         ISP1Verifier(verifier).verifyProof(fibonacciProgramVKey, _publicValues, _proofBytes);
-        PublicValuesStruct memory publicValues = abi.decode(_publicValues, (PublicValuesStruct));
-        return (publicValues.n, publicValues.a, publicValues.b);
+        return true;
     }
 }

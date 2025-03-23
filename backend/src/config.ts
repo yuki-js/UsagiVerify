@@ -9,6 +9,7 @@ const schema = Type.Object({
   ERC1155WithLock_ADDRESS: Type.String(),
   manpokoUrl: Type.String(),
   masterSecret: Type.String(),
+  skipProve: Type.Optional(Type.Boolean()),
 });
 
 export default nfigure({

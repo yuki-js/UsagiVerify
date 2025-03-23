@@ -10,14 +10,18 @@
 //! RUST_LOG=info cargo run --release --bin evm -- --system plonk
 //! ```
 
-use alloy_sol_types::SolType;
 use clap::{Parser, ValueEnum};
-use fibonacci_lib::PublicValuesStruct;
+use fibonacci_lib::{IoHashState, Param, Sprm};
 use serde::{Deserialize, Serialize};
 use sp1_sdk::{
     include_elf, HashableKey, ProverClient, SP1ProofWithPublicValues, SP1Stdin, SP1VerifyingKey,
 };
 use std::path::PathBuf;
+use streamsha::{
+    hash_state::HashState,
+    traits::{Resumable, StreamHasher},
+    Sha256,
+};
 
 /// The ELF (executable and linkable format) file for the Succinct RISC-V zkVM.
 pub const FIBONACCI_ELF: &[u8] = include_elf!("fibonacci-program");
@@ -30,6 +34,9 @@ struct EVMArgs {
     n: u32,
     #[clap(long, value_enum, default_value = "groth16")]
     system: ProofSystem,
+
+    #[clap(long)]
+    param: String,
 }
 
 /// Enum representing the available proof systems
@@ -43,9 +50,6 @@ enum ProofSystem {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 struct SP1FibonacciProofFixture {
-    a: u32,
-    b: u32,
-    n: u32,
     vkey: String,
     public_values: String,
     proof: String,
@@ -58,6 +62,9 @@ fn main() {
     // Parse the command line arguments.
     let args = EVMArgs::parse();
 
+    // decode params
+    let param: Param = serde_json::from_str(&args.param).unwrap();
+
     // Setup the prover client.
     let client = ProverClient::from_env();
 
@@ -66,9 +73,38 @@ fn main() {
 
     // Setup the inputs.
     let mut stdin = SP1Stdin::new();
-    stdin.write(&args.n);
 
-    println!("n: {}", args.n);
+    // Read the inputs from the command line arguments as hex strings.
+    let master_secret = hex::decode(&param.master_secret).unwrap();
+    let req_payload = hex::decode(&param.req_payload).unwrap();
+    let req_payload_mac = hex::decode(&param.req_payload_mac).unwrap();
+    let res_payload = hex::decode(&param.res_payload).unwrap();
+    let res_payload_mac = hex::decode(&param.res_payload_mac).unwrap();
+
+    let mut h = Sha256::new();
+    h.update(&res_payload[0..64 * 3]);
+    let hs = match h.pause() {
+        HashState::Sha256(hs) => hs,
+        _ => panic!("Hash type does not match"),
+    };
+
+    let res_payload_sprm = Sprm {
+        hs: IoHashState {
+            h: hs.h,
+            message_len: hs.message_len,
+            block_len: hs.block_len,
+            current_block: hs.current_block.to_vec(),
+        },
+        remaining: res_payload[64 * 3..].to_vec(),
+    };
+
+    // Write the inputs to stdin.
+    stdin.write(&master_secret);
+    stdin.write(&req_payload);
+    stdin.write(&req_payload_mac);
+    stdin.write(&res_payload_sprm);
+    stdin.write(&res_payload_mac);
+
     println!("Proof System: {:?}", args.system);
 
     // Generate the proof based on the selected proof system.
@@ -89,13 +125,9 @@ fn create_proof_fixture(
 ) {
     // Deserialize the public values.
     let bytes = proof.public_values.as_slice();
-    let PublicValuesStruct { n, a, b } = PublicValuesStruct::abi_decode(bytes, false).unwrap();
 
     // Create the testing fixture so we can test things end-to-end.
     let fixture = SP1FibonacciProofFixture {
-        a,
-        b,
-        n,
         vkey: vk.bytes32().to_string(),
         public_values: format!("0x{}", hex::encode(bytes)),
         proof: format!("0x{}", hex::encode(proof.bytes())),

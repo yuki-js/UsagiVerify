@@ -11,6 +11,7 @@ import {
   calculateSha256,
   deriveRequestMacKey,
 } from "@usagiverify/common";
+import { exec } from "child_process";
 
 const request = Type.Object({
   address: Type.String(),
@@ -111,8 +112,6 @@ export const root = new Hono()
         return c.text("Failed to get info", 500);
       }
       const { payload, mac, sha256Payload } = await response.json();
-      console.log("payload", payload);
-      console.log("mac", mac);
       const reproducedMac = calculateMac(
         deriveResponseMacKey(Buffer.from(config.masterSecret, "utf-8")),
         Buffer.from(payload, "hex")
@@ -126,7 +125,42 @@ export const root = new Hono()
         return c.text("Unauthorized", 401);
       }
 
-      // SPRM phase
+      const param = {
+        master_secret: Buffer.from(config.masterSecret, "utf-8").toString(
+          "hex"
+        ),
+        req_payload: Buffer.from(accessToken, "utf-8").toString("hex"),
+        req_payload_mac: reqMac.toString("hex"),
+        res_payload: payload,
+        res_payload_mac: mac,
+      };
+      const paramJson = JSON.stringify(param);
+      if (!config.skipProve) {
+        try {
+          const { stdout, stderr } = await new Promise<{
+            stdout: string;
+            stderr: string;
+          }>((resolve, reject) => {
+            exec(
+              `cd dist && ./prover --param '${paramJson}' --prove`,
+              (error, stdout, stderr) => {
+                if (error) {
+                  reject({ error, stderr });
+                } else {
+                  resolve({ stdout, stderr });
+                }
+              }
+            );
+          });
+          console.log(`stdout: ${stdout}`);
+          console.error(`stderr: ${stderr}`);
+        } catch (error: any) {
+          console.error(`exec error: ${error}`);
+          return c.text("Failed to prove", 500);
+        }
+      } else {
+        console.log("skip prove");
+      }
 
       return c.json({
         ok: true,

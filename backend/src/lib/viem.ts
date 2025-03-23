@@ -12,7 +12,8 @@ import { ERC1155WithLock_ABI } from "./../util/abi/ERC1155WithLock";
 const chain = sepolia;
 const ERC1155WithLock_ADDRESS = config.ERC1155WithLock_ADDRESS as `0x${string}`;
 // sepolia END Point
-const SEPOLIA_END_POINT = "https://eth-sepolia.g.alchemy.com/v2/rfMVv9B9tS5QgGVcVn83K0lC-aG8ZEVdoKxs-03sij-U_N0iOlrSsZFr29-IqbuF";
+const SEPOLIA_END_POINT =
+  "https://eth-sepolia.g.alchemy.com/v2/rfMVv9B9tS5QgGVcVn83K0lC-aG8ZEVdoKxs-03sij-U_N0iOlrSsZFr29-IqbuF";
 
 // 公開クライアント
 const publicClient = createPublicClient({
@@ -40,33 +41,33 @@ const contract = getContract({
  * @param tokenId
  * @returns
  */
-export const getBalance = async (account: string, tokenId: bigint) => {
+export async function getBalance(account: string, tokenId: bigint) {
   return Number(await contract.read.balanceOf([account, tokenId]));
-};
+}
 
 /**
  * check if token is locked
  * @param tokenId
  * @returns
  */
-export const isTokenLocked = async (tokenId: bigint) => {
+export async function isTokenLocked(tokenId: bigint) {
   return await contract.read.locked([tokenId]);
-};
+}
 
 /**
  * get token URI method
  * @param tokenId
  * @returns
  */
-export const getTokenURI = async (tokenId: bigint) => {
+export async function getTokenURI(tokenId: bigint) {
   return await contract.read.uri([tokenId]);
-};
+}
 
 /**
  * lock token method
  * @param tokenId
  */
-export const lockToken = async (tokenId: bigint) => {
+export async function lockToken(tokenId: bigint) {
   try {
     const txHash = await walletClient.writeContract({
       address: ERC1155WithLock_ADDRESS,
@@ -84,13 +85,13 @@ export const lockToken = async (tokenId: bigint) => {
   } catch (error) {
     console.log("error occured when lockToken:", error);
   }
-};
+}
 
 /**
  * token unlock method
  * @param tokenId
  */
-export const unlockToken = async (tokenId: bigint) => {
+export async function unlockToken(tokenId: bigint) {
   try {
     const txHash = await walletClient.writeContract({
       address: ERC1155WithLock_ADDRESS,
@@ -108,7 +109,7 @@ export const unlockToken = async (tokenId: bigint) => {
   } catch (error) {
     console.log("error occured when unlockToken:", error);
   }
-};
+}
 
 /**
  * mint NFT method
@@ -117,12 +118,12 @@ export const unlockToken = async (tokenId: bigint) => {
  * @param amount
  * @param uri
  */
-export const mintToken = async (
+export async function mintToken(
   to: string,
   tokenId: bigint,
   amount: bigint,
   uri: string
-) => {
+) {
   try {
     const txHash = await walletClient.writeContract({
       address: ERC1155WithLock_ADDRESS,
@@ -140,7 +141,7 @@ export const mintToken = async (
   } catch (error) {
     console.log("error occured when mint:", error);
   }
-};
+}
 
 /**
  * simple transfer token method
@@ -150,12 +151,12 @@ export const mintToken = async (
  * @param amount
  * @returns
  */
-export const transferToken = async (
+export async function transferToken(
   from: string,
   to: string,
   tokenId: bigint,
   amount: bigint
-) => {
+) {
   try {
     const txHash = await walletClient.writeContract({
       address: ERC1155WithLock_ADDRESS,
@@ -172,7 +173,7 @@ export const transferToken = async (
   } catch (error) {
     console.log("error occured when safeTransferFrom:", error);
   }
-};
+}
 
 /**
  * batch transfer token method
@@ -182,12 +183,12 @@ export const transferToken = async (
  * @param amounts
  * @returns
  */
-export const transferBatchToken = async (
+export async function transferBatchToken(
   from: string,
   to: string,
   tokenIds: bigint[],
   amounts: bigint[]
-) => {
+) {
   try {
     const txHash = await walletClient.writeContract({
       address: ERC1155WithLock_ADDRESS,
@@ -205,4 +206,4 @@ export const transferBatchToken = async (
   } catch (error) {
     console.log("error occured when safeBatchTransferFrom:", error);
   }
-};
+}
