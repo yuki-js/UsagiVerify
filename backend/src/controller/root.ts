@@ -106,6 +106,8 @@ export const root = new Hono()
         return c.text("Unauthorized", 401);
       }
 
+      // SPRM phase
+
       return c.json({
         ok: true,
       });

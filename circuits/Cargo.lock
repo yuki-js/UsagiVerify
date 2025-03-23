@@ -5326,6 +5326,7 @@ dependencies = [
  "rsa",
  "serde",
  "sha2",
+ "streamsha",
 ]
 
 [[package]]

@@ -8,28 +8,16 @@
 #![no_main]
 
 use streamsha::{ hash_state::{HashState, Sha256HashState}, traits::{Resumable, StreamHasher}, Sha256};
-use usagiverify_lib::{verify_doc, IoHashState};
+use usagiverify_lib::{verify, verify_doc, IoHashState, Sprm};
 sp1_zkvm::entrypoint!(main);
 
 pub fn main() {
-    let hash_state = sp1_zkvm::io::read::<IoHashState>();
-    let remaining = sp1_zkvm::io::read::<Vec<u8>>();
-    let signature = sp1_zkvm::io::read::<Vec<u8>>();
+    let master_secret = sp1_zkvm::io::read_vec(); // master secret, private input
+    let req_payload = sp1_zkvm::io::read_vec(); // request payload(access token), private input
+    let req_payload_mac = sp1_zkvm::io::read_vec(); // MAC of the request payload, private input
 
-    let mut h = Sha256::resume(HashState::Sha256(Sha256HashState {
-        h: hash_state.h,
-        message_len: hash_state.message_len,
-        block_len: hash_state.block_len,
-        current_block: {
-            let mut array = [0u8; 64];
-            let bytes = &hash_state.current_block[..array.len()];
-            array.copy_from_slice(bytes);
-            array
-        },
-    })).unwrap();
-    h.update(&remaining);
-    let digest = h.finish();
+    let res_payload = sp1_zkvm::io::read::<Sprm>(); // response payload as SPRM
+    let res_payload_mac = sp1_zkvm::io::read_vec(); // MAC of the response payload, private input
 
-    let verified = verify_doc(&digest, &signature);
-    sp1_zkvm::io::commit(&verified);
+    sp1_zkvm::io::commit(&verify(&master_secret, &req_payload, &req_payload_mac, &res_payload, &res_payload_mac));
 }
