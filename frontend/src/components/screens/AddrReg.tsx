@@ -1,7 +1,5 @@
-import { accessTokenAtom } from "@/lib/atoms";
 import { honoApp } from "@usagiverify/backend";
 import { hc } from "hono/client";
-import { useAtom } from "jotai";
 import Router from "next/router";
 import React, { useState } from "react";
 import { LoadingSpinner } from "../LoadingSpinner";
@@ -17,14 +15,12 @@ import { Screen } from "../ui/Screen";
 const Prove: React.FC = () => {
   const [address, setAddress] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [accessToken, setAccessToken] = useAtom(accessTokenAtom);
 
   // create hono client
   const client = hc<typeof honoApp>("http://localhost:5000");
 
   const handleAddressChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    // setAddress(e.target.value);
-    setAddress("0x51908F598A5e0d8F1A3bAbFa6DF76F9704daD072");
+    setAddress(e.target.value);
   };
 
   /**
@@ -36,6 +32,16 @@ const Prove: React.FC = () => {
     try {
       // Simulate API call or blockchain interaction
       await new Promise((resolve) => setTimeout(resolve, 2000));
+
+      // call get access token api
+      const response = await client["issue-at"].$post({
+        json: {
+          address: address,
+        },
+      });
+
+      // accessTokenを取得する。
+      const accessToken = (await response.json()).accessToken;
 
       console.log("accessToken:", accessToken);
       // ここでZKproof生成ロジックのAPIを呼びだす。

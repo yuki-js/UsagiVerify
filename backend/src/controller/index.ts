@@ -3,10 +3,7 @@ import { cors } from "hono/cors";
 import { healthz } from "./healthz";
 import { root } from "./root";
 
-const app = new Hono();
-
-// CROS configuration
-app
+const app = new Hono()
   .use(
     "*",
     cors({

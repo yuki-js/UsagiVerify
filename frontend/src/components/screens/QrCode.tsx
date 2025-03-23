@@ -1,7 +1,3 @@
-import { accessTokenAtom } from "@/lib/atoms";
-import { honoApp } from "@usagiverify/backend";
-import { hc } from "hono/client";
-import { useAtom } from "jotai";
 import Router from "next/router";
 import React, { useEffect, useState } from "react";
 import { Button } from "../ui/Button";
@@ -18,26 +14,8 @@ const QrCodeScreen: React.FC = () => {
     "idle" | "scanning" | "authenticating" | "success"
   >("idle");
   const [progress, setProgress] = useState(0);
-  const [accessToken, setAccessToken] = useAtom(accessTokenAtom);
-
-  // create hono client
-  const client = hc<typeof honoApp>("http://localhost:5000");
 
   const goToNextStep = async () => {
-    // call get access token api
-    const response = await client["issue-at"].$post({
-      json: {
-        address: "0x51908F598A5e0d8F1A3bAbFa6DF76F9704daD072",
-      },
-    });
-
-    // accessTokenを取得する。
-    const accessToken = (await response.json()).accessToken;
-
-    console.log("accessToken :", accessToken);
-    // set access token to atom usestate
-    setAccessToken(accessToken);
-
     Router.push("/addr-reg");
   };
 
