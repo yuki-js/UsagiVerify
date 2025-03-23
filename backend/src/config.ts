@@ -10,6 +10,7 @@ const schema = Type.Object({
   manpokoUrl: Type.String(),
   masterSecret: Type.String(),
   skipProve: Type.Optional(Type.Boolean()),
+  rpcUrl: Type.String(),
 });
 
 export default nfigure({

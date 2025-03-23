@@ -18,7 +18,7 @@ const SEPOLIA_END_POINT =
 // 公開クライアント
 const publicClient = createPublicClient({
   chain,
-  transport: http(SEPOLIA_END_POINT),
+  transport: http(config.rpcUrl),
 });
 
 // ウォレットクライアント
