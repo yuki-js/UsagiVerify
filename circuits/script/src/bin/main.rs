@@ -11,12 +11,16 @@
 //! ```
 
 use clap::Parser;
-use streamsha::{hash_state::HashState, traits::{Resumable, StreamHasher}, Sha256};
-use usagiverify_lib::IoHashState;
+use fibonacci_lib::{IoHashState, Param, Sprm};
 use sp1_sdk::{include_elf, ProverClient, SP1Stdin};
+use streamsha::{
+    hash_state::HashState,
+    traits::{Resumable, StreamHasher},
+    Sha256,
+};
 
 /// The ELF (executable and linkable format) file for the Succinct RISC-V zkVM.
-pub const USAGIVERIFY_ELF: &[u8] = include_elf!("usagiverify-program");
+pub const FIBONACCI_ELF: &[u8] = include_elf!("fibonacci-program");
 
 /// The arguments for the command.
 #[derive(Parser, Debug)]
@@ -28,8 +32,8 @@ struct Args {
     #[clap(long)]
     prove: bool,
 
-    #[clap(long, default_value = "20")]
-    n: u32,
+    #[clap(long)]
+    param: String,
 }
 
 fn main() {
@@ -45,52 +49,59 @@ fn main() {
         std::process::exit(1);
     }
 
+    // decode params
+    let param: Param = serde_json::from_str(&args.param).unwrap();
+
     // Setup the prover client.
     let client = ProverClient::from_env();
 
     // Setup the inputs.
     let mut stdin = SP1Stdin::new();
 
-    let message = b"Lorem ipsum dolor sit amet, consectetur adipiscing elit. \
-        Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. \
-        Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. \
-        Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. \
-        Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.";
-
-    let (hiding, public) = &message.split_at(55);
+    // Read the inputs from the command line arguments as hex strings.
+    let master_secret = hex::decode(&param.master_secret).unwrap();
+    let req_payload = hex::decode(&param.req_payload).unwrap();
+    let req_payload_mac = hex::decode(&param.req_payload_mac).unwrap();
+    let res_payload = hex::decode(&param.res_payload).unwrap();
+    let res_payload_mac = hex::decode(&param.res_payload_mac).unwrap();
 
     let mut h = Sha256::new();
-    h.update(hiding);
-    let hash_state = h.pause();
-    let ex_hash_state = match hash_state {
-        HashState::Sha256(hash_state) => hash_state,
-        _ => panic!("Invalid hash state"),
+    h.update(&res_payload[0..64 * 3]);
+    let hs = match h.pause() {
+        HashState::Sha256(hs) => hs,
+        _ => panic!("Hash type does not match"),
     };
 
-    let mut full_hash = Sha256::new();
-    full_hash.update(message);
-    let digest = full_hash.finish();
-
-    let iohs = IoHashState {
-        h: ex_hash_state.h,
-        message_len: ex_hash_state.message_len,
-        block_len: ex_hash_state.block_len,
-        current_block: ex_hash_state.current_block.to_vec(),
+    let res_payload_sprm = Sprm {
+        hs: IoHashState {
+            h: hs.h,
+            message_len: hs.message_len,
+            block_len: hs.block_len,
+            current_block: hs.current_block.to_vec(),
+        },
+        remaining: res_payload[64 * 3..].to_vec(),
     };
-    stdin.write(&iohs);
-    stdin.write(public);
-    stdin.write(&digest.to_vec());
+
+    // Write the inputs to stdin.
+    stdin.write(&master_secret);
+    stdin.write(&req_payload);
+    stdin.write(&req_payload_mac);
+    stdin.write(&res_payload_sprm);
+    stdin.write(&res_payload_mac);
 
     if args.execute {
         // Execute the program
-        let (output, report) = client.execute(USAGIVERIFY_ELF, &stdin).run().unwrap();
-        println!("Program executed successfully. Result: {:?}", output);
+        let (output, report) = client.execute(FIBONACCI_ELF, &stdin).run().unwrap();
+        println!("Program executed successfully.");
+
+        // Read the output.
+        println!("Result: {:?}", output);
 
         // Record the number of cycles executed.
         println!("Number of cycles: {}", report.total_instruction_count());
     } else {
         // Setup the program for proving.
-        let (pk, vk) = client.setup(USAGIVERIFY_ELF);
+        let (pk, vk) = client.setup(FIBONACCI_ELF);
 
         // Generate the proof
         let proof = client

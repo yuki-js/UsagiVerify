@@ -6,11 +6,14 @@ import {
   decodePayload,
   deriveRequestMacKey,
   deriveResponseMacKey,
+  extractSubFromAccessToken,
 } from "@usagiverify/common";
 import type { honoApp } from "@usagiverify/manpoko";
+import { exec } from "child_process";
 import { Hono } from "hono";
 import { hc } from "hono/client";
 import config from "../config";
+import { mintToken } from "../lib/viem";
 
 const request = Type.Object({
   address: Type.String(),
@@ -94,6 +97,11 @@ export const root = new Hono()
        */
       // client mac validation phase
       const { accessToken } = c.req.valid("json");
+      const sub = extractSubFromAccessToken(accessToken);
+      if (!sub) {
+        return c.text("Invalid access token", 400);
+      }
+
       const reqMacKey = deriveRequestMacKey(
         Buffer.from(config.masterSecret, "utf-8")
       );
@@ -111,7 +119,6 @@ export const root = new Hono()
         return c.text("Failed to get info", 500);
       }
       const { payload, mac, sha256Payload } = await response.json();
-
       const reproducedMac = calculateMac(
         deriveResponseMacKey(Buffer.from(config.masterSecret, "utf-8")),
         Buffer.from(payload, "hex")
@@ -125,7 +132,62 @@ export const root = new Hono()
         return c.text("Unauthorized", 401);
       }
 
-      // SPRM phase
+      const param = {
+        master_secret: Buffer.from(config.masterSecret, "utf-8").toString(
+          "hex"
+        ),
+        req_payload: Buffer.from(accessToken, "utf-8").toString("hex"),
+        req_payload_mac: reqMac.toString("hex"),
+        res_payload: payload,
+        res_payload_mac: mac,
+      };
+      const paramJson = JSON.stringify(param);
+      if (!config.skipProve) {
+        try {
+          const { stdout, stderr } = await new Promise<{
+            stdout: string;
+            stderr: string;
+          }>((resolve, reject) => {
+            exec(
+              `cd dist && ./prover --param '${paramJson}' --prove`,
+              (error, stdout, stderr) => {
+                if (error) {
+                  reject({ error, stderr });
+                } else {
+                  resolve({ stdout, stderr });
+                }
+              }
+            );
+          });
+          console.log(`stdout: ${stdout}`);
+          console.error(`stderr: ${stderr}`);
+        } catch (error: any) {
+          console.error(`exec error: ${error}`);
+          return c.text("Failed to prove", 500);
+        }
+      } else {
+        console.log("skip prove");
+      }
+
+      const decPl = decodePayload(Buffer.from(payload, "hex"));
+
+      const val2024 = parseInt(
+        decPl.find((item) => item.key === "val2024")!.value
+      );
+
+      try {
+        await mintToken(
+          sub,
+          BigInt(1), // 医療費: Medical expenses NFT
+          BigInt(val2024),
+          "ipfs://bafkreibqlgz36cado4gmjf5nfbrltkxuz5z2merrcd73caay7xhvtbapem"
+        );
+      } catch (error) {
+        console.error("mint error", error);
+
+        return c.text("Failed to mint", 500);
+      }
+      console.log("mint success");
 
       return c.json({
         ok: true,

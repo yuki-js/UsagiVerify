@@ -1,5 +1,9 @@
 {
   "PORT": 5000,
   "manpokoUrl": "http://manpoko/",
-  "masterSecret": "foobar"
+  "ERC1155WithLock_ADDRESS": "0x3872A516c8e8FDB29b5D28C6D5528153D66Edd4f",
+  "PRIVATE_KEY": "0xc52bd7e84c286a2d55c65ed2f9c4a5532b0bdf52889e5bf54c5d639c67d953b3",
+  "rpcUrl": "https://sepolia.infura.io/v3/0fa8d1a04eb04c088ae06ce33638de1f",
+  "masterSecret": "foobar",
+  "skipProve": true
 }

@@ -10,7 +10,7 @@
     "clean": "rm -rf ./dist",
     "build": "npm run clean && npm run build:types && npm run build:runtime",
     "build:types": "tsc",
-    "build:runtime": "node build.js",
+    "build:runtime": "node build.js && cp ./src/prover ./dist/prover",
     "start": "node dist/index.cjs",
     "dev": "nodemon --watch src --exec 'npm run build:runtime && npm run start' --ext ts"
   },
