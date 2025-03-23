@@ -3,3 +3,5 @@ tsconfig.tsbuildinfo
 dist
 coverage
 *.log
+
+.env
