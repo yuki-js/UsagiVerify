@@ -99,6 +99,8 @@ ERC6268 を継承した NFT の発行・管理、検証ロジックを実装。Z
 
 ### Succinct がどのように効果的であったか
 
+Succinct を使った ZK サーキットの開発は非常に良好で、既存の Rust アセットも問題なく動かすことができました。
+
 ### Succinct を実際に活用しているコード
 
 [GitHub - UsagiVerify/circuits](https://github.com/yuki-js/UsagiVerify/tree/main/circuits)
