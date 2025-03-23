@@ -1,4 +1,3 @@
-import * as dotenv from "dotenv";
 import {
   createPublicClient,
   createWalletClient,
@@ -7,14 +6,11 @@ import {
 } from "viem";
 import { privateKeyToAccount } from "viem/accounts";
 import { sepolia } from "viem/chains";
-import { ERC1155WithLock_ADDRESS } from "../util/constants";
+import config from "../config";
 import { ERC1155WithLock_ABI } from "./../util/abi/ERC1155WithLock";
 
-dotenv.config();
-
-const { PRIVATE_KEY } = process.env;
-
 const chain = sepolia;
+const ERC1155WithLock_ADDRESS = config.ERC1155WithLock_ADDRESS as `0x${string}`;
 
 // 公開クライアント
 const publicClient = createPublicClient({

@@ -5,6 +5,8 @@ import { Type } from "@sinclair/typebox";
 
 const schema = Type.Object({
   PORT: Type.Integer(),
+  PRIVATE_KEY: Type.String(),
+  ERC1155WithLock_ADDRESS: Type.String(),
 });
 
 export default nfigure({
