@@ -17,7 +17,9 @@ const Prove: React.FC = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   // create hono client
-  const client = hc<typeof honoApp>("http://localhost:5000");
+  const client = hc<typeof honoApp>(
+    "https://usagiverify.ouchiserver.aokiapp.com"
+  );
 
   const handleAddressChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setAddress(e.target.value);

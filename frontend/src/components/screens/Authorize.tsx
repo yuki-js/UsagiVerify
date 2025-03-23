@@ -8,8 +8,8 @@ import { Panel } from "../ui/Panel";
 import { Screen } from "../ui/Screen";
 
 const serviceInfo: ServiceConnectionInfo = {
-  provider: "Ubie株式会社",
-  serviceDescription: "症状検索エンジン「ユビー」",
+  provider: "UsagiVerify株式会社",
+  serviceDescription: "症状検索エンジン「Usagi」",
   dataAccess: [
     "保険医療機関・保険薬局等にて処方された薬剤の情報",
     "健診実施機関で受診した健診情報等",

@@ -13,7 +13,7 @@ const chain = sepolia;
 const ERC1155WithLock_ADDRESS = config.ERC1155WithLock_ADDRESS as `0x${string}`;
 // sepolia END Point
 const SEPOLIA_END_POINT =
-  "https://eth-sepolia.g.alchemy.com/v2/rfMVv9B9tS5QgGVcVn83K0lC-aG8ZEVdoKxs-03sij-U_N0iOlrSsZFr29-IqbuF";
+  "https://eth-sepolia.g.alchemy.com/v2/rfMVv9B9tS5QgGVcVn83K0lC-aG8ZEVd";
 
 // 公開クライアント
 const publicClient = createPublicClient({
