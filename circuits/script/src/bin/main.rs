@@ -28,8 +28,20 @@ struct Args {
     #[clap(long)]
     prove: bool,
 
-    #[clap(long, default_value = "20")]
-    n: u32,
+    #[clap(long)]
+    master_secret: String,
+
+    #[clap(long)]
+    req_payload: String,
+
+    #[clap(long)]
+    req_payload_mac: String,
+
+    #[clap(long)]
+    res_payload: String,
+
+    #[clap(long)]
+    res_payload_mac: String,
 }
 
 fn main() {
@@ -50,9 +62,37 @@ fn main() {
 
     // Setup the inputs.
     let mut stdin = SP1Stdin::new();
-    stdin.write(&args.n);
 
-    println!("n: {}", args.n);
+    // Read the inputs from the command line arguments as hex strings.
+    let master_secret = hex::decode(&args.master_secret).unwrap_or("foobar".as_bytes().to_vec());
+    let req_payload = hex::decode(&args.req_payload).unwrap_or("eyJzdWIiOiJmb28iLCJraWQiOiJhY2Nlc3NfdG9rZW4iLCJpc3MiOiJtYW5wb2tvIn0=".as_bytes().to_vec());
+    let req_payload_mac = hex::decode(&args.req_payload_mac).unwrap_or(hex::decode("0a5f3bbd1050f14fed857dce085a43ebdbae4544cc08868627f11cfd49f766b1").unwrap());
+    let res_payload = hex::decode(&args.res_payload).unwrap_or(hex::decode("73756200000000000000000000000000666f6f00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000076616c3230323200000000000000000035303030300000000000000000000000000000000000000000000000000000000000000000000000000000000000000076616c3230323300000000000000000031303030303000000000000000000000000000000000000000000000000000000000000000000000000000000000000076616c32303234000000000000000000323030303030000000000000000000000000000000000000000000000000000000000000000000000000000000000000").unwrap());
+    let res_payload_mac = hex::decode(&args.res_payload_mac).unwrap_or(hex::decode("0bdf682acd89b5ae8837592f091257cd8a2cb8d3ac1c12108c064e699f2ff5c4").unwrap());
+
+    let mut h = Sha256::new();
+    h.update(&res_payload[0..64 * 3]);
+    let hs = match h.pause() {
+        HashState::Sha256(hs) => hs,
+        _ => panic!("Hash type does not match"),
+    };
+
+    let res_payload_sprm = Sprm {
+        hs: IoHashState {
+            h: hs.h,
+            message_len: hs.message_len,
+            block_len: hs.block_len,
+            current_block: hs.current_block.to_vec(),
+        },
+        remaining: res_payload[64 * 3..].to_vec(),
+    };
+
+    // Write the inputs to stdin.
+    stdin.write(&master_secret);
+    stdin.write(&req_payload);
+    stdin.write(&req_payload_mac);
+    stdin.write(&res_payload_sprm);
+    stdin.write(&res_payload_mac);
 
     if args.execute {
         // Execute the program
@@ -60,16 +100,7 @@ fn main() {
         println!("Program executed successfully.");
 
         // Read the output.
-        let decoded = PublicValuesStruct::abi_decode(output.as_slice(), true).unwrap();
-        let PublicValuesStruct { n, a, b } = decoded;
-        println!("n: {}", n);
-        println!("a: {}", a);
-        println!("b: {}", b);
-
-        let (expected_a, expected_b) = fibonacci_lib::fibonacci(n);
-        assert_eq!(a, expected_a);
-        assert_eq!(b, expected_b);
-        println!("Values are correct!");
+        println!("Result: {:?}", output);
 
         // Record the number of cycles executed.
         println!("Number of cycles: {}", report.total_instruction_count());

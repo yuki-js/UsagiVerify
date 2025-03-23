@@ -12,19 +12,12 @@ use alloy_sol_types::SolType;
 use fibonacci_lib::{fibonacci, PublicValuesStruct};
 
 pub fn main() {
-    // Read an input to the program.
-    //
-    // Behind the scenes, this compiles down to a custom system call which handles reading inputs
-    // from the prover.
-    let n = sp1_zkvm::io::read::<u32>();
+    let master_secret = sp1_zkvm::io::read_vec(); // master secret, private input
+    let req_payload = sp1_zkvm::io::read_vec(); // request payload(access token), private input
+    let req_payload_mac = sp1_zkvm::io::read_vec(); // MAC of the request payload, private input
 
-    // Compute the n'th fibonacci number using a function from the workspace lib crate.
-    let (a, b) = fibonacci(n);
+    let res_payload_sprm = sp1_zkvm::io::read::<Sprm>(); // response payload as SPRM
+    let res_payload_mac = sp1_zkvm::io::read_vec(); // MAC of the response payload, private input
 
-    // Encode the public values of the program.
-    let bytes = PublicValuesStruct::abi_encode(&PublicValuesStruct { n, a, b });
-
-    // Commit to the public values of the program. The final proof will have a commitment to all the
-    // bytes that were committed to.
-    sp1_zkvm::io::commit_slice(&bytes);
+    sp1_zkvm::io::commit(&verify(&master_secret, &req_payload, &req_payload_mac, &res_payload_sprm, &res_payload_mac));
 }
