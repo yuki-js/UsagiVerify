@@ -22,7 +22,7 @@ const publicClient = createPublicClient({
 const walletClient = createWalletClient({
   chain,
   transport: http(),
-  account: privateKeyToAccount(PRIVATE_KEY as `0x${string}`),
+  account: privateKeyToAccount(config.PRIVATE_KEY as `0x${string}`),
 });
 
 // Create Contract instance
