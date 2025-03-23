@@ -51,6 +51,12 @@ export const root = new Hono()
        * アクセストークンをもとに情報を取得する
        * データを取得するだけで、ZKPは実行しない。
        * ZKPをする前の対象データ確認のために用いる
+       *
+       * 例:
+       * curl https://usagiverify.ouchiserver.aokiapp.com/get-info -X POST --json '{"accessToken": "eyJzdWIiOiJmb28iLCJraWQiOiJhY2Nlc3NfdG9rZW4iLCJpc3MiOiJtYW5wb2tvIn0="}'
+       * >> {"payload":[{"key":"sub","value":"foo"},{"key":"val2022","value":"50000"},{"key":"val2023","value":"100000"},{"key":"val2024","value":"200000"}],"macValid":true,"hashValid":true}
+       *
+       * これの意味するところは、sub(利用者のアドレス)がfooで、例えば、医療費のデータを採ってきたとして、2022年の値が50000、2023年の値が100000、2024年の値が200000であることを示す。またMACが正しいこと、SHA256のハッシュ値が正しいこと、ゆえに、改ざんされていないことを示す。
        */
       const { accessToken } = c.req.valid("json");
 
