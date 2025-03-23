@@ -1,7 +1,7 @@
 # UsagiVerify
 
 <div align="center">
-  <img src="./docs/logo.jpeg" height="200">
+  <img src="./assets/1x/logo-round.png" height="200">
 </div>
 
 ## Overview
