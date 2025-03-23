@@ -7,6 +7,8 @@ const schema = Type.Object({
   PORT: Type.Integer(),
   PRIVATE_KEY: Type.String(),
   ERC1155WithLock_ADDRESS: Type.String(),
+  manpokoUrl: Type.String(),
+  masterSecret: Type.String(),
 });
 
 export default nfigure({

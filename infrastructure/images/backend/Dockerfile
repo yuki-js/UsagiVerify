@@ -1,43 +1,15 @@
-# Build stage
 FROM node:22-slim AS builder
 
 WORKDIR /app
 
-# Copy root package files for workspace setup
-COPY package.json package-lock.json ./
-
-# Copy backend package files
-COPY backend/package.json backend/
-COPY backend/tsconfig.json backend/
-COPY backend/build.js backend/
+# copy everything to the container
+COPY . .
 
 # Install dependencies
-RUN npm ci
+RUN npm i
 
-# Copy source files
-COPY backend/src/ backend/src/
-
-# Build the application
-RUN npm run -w backend build
-
-# Runtime stage
-FROM node:22-slim
-
-WORKDIR /app
-
-# Copy package files
-COPY --from=builder /app/package.json ./
-COPY --from=builder /app/package-lock.json ./
-COPY --from=builder /app/backend/package.json backend/
-
-# Copy built files
-COPY --from=builder /app/backend/dist/ backend/dist/
-
-# Install production dependencies only
-RUN npm ci --omit=dev --workspace backend
-
-# Copy config file
-COPY backend/config.development.development.json backend/
+# Build all the packages
+RUN npm run -w common build && npm run -w manpoko build && npm run -w backend build
 
 # Set environment variables
 ENV NODE_ENV=production

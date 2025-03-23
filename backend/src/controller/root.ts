@@ -1,21 +1,134 @@
 import { tbValidator } from "@hono/typebox-validator";
-import { TSchema, Type } from "@sinclair/typebox";
+import { Type } from "@sinclair/typebox";
 import { Hono } from "hono";
+import { hc } from "hono/client";
+import type { honoApp } from "@usagiverify/manpoko";
+import config from "../config";
+import {
+  deriveResponseMacKey,
+  calculateMac,
+  decodePayload,
+  calculateSha256,
+  deriveRequestMacKey,
+} from "@usagiverify/common";
 
 const request = Type.Object({
-  name: Type.String(),
-  age: Type.Number(),
+  address: Type.String(),
 });
 
 export const root = new Hono()
-  .post("/", tbValidator("json", request), (c) => {
+  .post("/issue-at", tbValidator("json", request), async (c) => {
+    /**
+     * アクセストークン発行
+     * アドレスをもとにアクセストークンを発行する
+     * 後のリクエストでこのアクセストークンを使う
+     */
+    const { address } = c.req.valid("json");
+
+    const client = hc<typeof honoApp>(config.manpokoUrl);
+    const response = await client.index.$post({
+      json: {
+        sub: address,
+      },
+    });
+    if (response.status !== 200) {
+      return c.text("Failed to issue access token", 500);
+    }
+    const { accessToken } = await response.json();
+    if (!accessToken) {
+      return c.text("Failed to issue access token", 500);
+    }
+
     return c.json({
-      message: "Hello World",
-      data: c.req.valid("json"),
+      accessToken,
     });
   })
-  .get("/", (c) => {
-    return c.json({
-      message: "Hello World",
-    });
-  });
+  .post(
+    "/get-info",
+    tbValidator("json", Type.Object({ accessToken: Type.String() })),
+    async (c) => {
+      /**
+       * アクセストークンをもとに情報を取得する
+       * データを取得するだけで、ZKPは実行しない。
+       * ZKPをする前の対象データ確認のために用いる
+       *
+       * 例:
+       * curl https://usagiverify.ouchiserver.aokiapp.com/get-info -X POST --json '{"accessToken": "eyJzdWIiOiJmb28iLCJraWQiOiJhY2Nlc3NfdG9rZW4iLCJpc3MiOiJtYW5wb2tvIn0="}'
+       * >> {"payload":[{"key":"sub","value":"foo"},{"key":"val2022","value":"50000"},{"key":"val2023","value":"100000"},{"key":"val2024","value":"200000"}],"macValid":true,"hashValid":true}
+       *
+       * これの意味するところは、sub(利用者のアドレス)がfooで、例えば、医療費のデータを採ってきたとして、2022年の値が50000、2023年の値が100000、2024年の値が200000であることを示す。またMACが正しいこと、SHA256のハッシュ値が正しいこと、ゆえに、改ざんされていないことを示す。
+       */
+      const { accessToken } = c.req.valid("json");
+
+      const client = hc<typeof honoApp>(config.manpokoUrl);
+      const response = await client.selfinfo.$post({
+        json: {
+          accessToken,
+        },
+      });
+      if (response.status !== 200) {
+        return c.text("Failed to get info", 500);
+      }
+      const { payload, mac, sha256Payload } = await response.json();
+
+      const reproducedMac = calculateMac(
+        deriveResponseMacKey(Buffer.from(config.masterSecret, "utf-8")),
+        Buffer.from(payload, "hex")
+      );
+
+      return c.json({
+        payload: decodePayload(Buffer.from(payload, "hex")),
+        macValid: mac === reproducedMac.toString("hex"),
+        hashValid:
+          sha256Payload ===
+          calculateSha256(Buffer.from(payload, "hex")).toString("hex"),
+      });
+    }
+  )
+  .post(
+    "/prove",
+    tbValidator("json", Type.Object({ accessToken: Type.String() })),
+    async (c) => {
+      /**
+       * アクセストークンをもとに情報を取得し、それをもとにZKPを実行してNFTを発行する
+       */
+      // client mac validation phase
+      const { accessToken } = c.req.valid("json");
+      const reqMacKey = deriveRequestMacKey(
+        Buffer.from(config.masterSecret, "utf-8")
+      );
+
+      const reqMac = calculateMac(reqMacKey, Buffer.from(accessToken, "utf-8"));
+
+      const client = hc<typeof honoApp>(config.manpokoUrl);
+      const response = await client.selfinfo.$post({
+        json: {
+          accessToken,
+          mac: reqMac.toString("hex"),
+        },
+      });
+      if (response.status !== 200) {
+        return c.text("Failed to get info", 500);
+      }
+      const { payload, mac, sha256Payload } = await response.json();
+
+      const reproducedMac = calculateMac(
+        deriveResponseMacKey(Buffer.from(config.masterSecret, "utf-8")),
+        Buffer.from(payload, "hex")
+      );
+
+      if (
+        mac !== reproducedMac.toString("hex") ||
+        sha256Payload !==
+          calculateSha256(Buffer.from(payload, "hex")).toString("hex")
+      ) {
+        return c.text("Unauthorized", 401);
+      }
+
+      // SPRM phase
+
+      return c.json({
+        ok: true,
+      });
+    }
+  );

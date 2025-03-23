@@ -1,6 +1,4 @@
-use rsa::{pkcs1v15::{Signature, VerifyingKey}, BigUint, RsaPublicKey};
-use sha2::Sha256;
-use rsa::signature::Verifier;
+mod crypto;
 
 #[derive(serde::Serialize, serde::Deserialize, Debug)]
 pub struct IoHashState {
@@ -10,19 +8,32 @@ pub struct IoHashState {
     pub current_block: Vec<u8>,
 }
 
-pub fn verify_doc(
-    hash: &[u8],
-    signature: &[u8],
+
+
+#[derive(serde::Serialize, serde::Deserialize, Debug)]
+pub struct Sprm {
+    pub hs: IoHashState,
+    pub remaining: Vec<u8>,
+}
+
+pub fn verify(
+    master_secret: &[u8],
+    req_payload: &[u8],
+    req_payload_mac: &[u8],
+    res_payload: &Sprm,
+    res_payload_mac: &[u8],
 ) -> bool {
-    let doc_verify_pubkey = RsaPublicKey::new_unchecked(
-        BigUint::new(vec![
-            0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07,
-            0x08, 0x09, 0x0A, 0x0B, 0x0C, 0x0D, 0x0E, 0x0F,
-        ]),
-        BigUint::new(vec![
-            0x01, 0x00, 0x01,
-        ])
-    );
-    let s = Signature::try_from(signature).unwrap();
-    VerifyingKey::<Sha256>::new(doc_verify_pubkey).verify(&hash, &s).is_ok()
+    let req_mac_key = crypto::derive_request_mac_key(master_secret);
+    let req_mac = crypto::calculate_mac(&req_mac_key, req_payload);
+    if req_mac != req_payload_mac {
+        return false;
+    }
+    let full_hash = crypto::construct_full_hash(res_payload);
+    let res_mac_key = crypto::derive_response_mac_key(master_secret);
+    let res_mac = crypto::calculate_mac(&res_mac_key, &full_hash);
+    if res_mac != res_payload_mac {
+        return false;
+    }
+
+    true
 }

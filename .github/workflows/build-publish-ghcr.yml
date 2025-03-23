@@ -12,6 +12,7 @@ jobs:
       matrix:
         name:
           - backend
+          - manpoko
     permissions:
       packages: write
       contents: read
